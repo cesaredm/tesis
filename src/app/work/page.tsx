@@ -1,3 +1,3 @@
 export default function Work() {
-  return <div>Work</div>;
+  return <div>Dasboard</div>;
 }

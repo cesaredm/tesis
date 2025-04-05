@@ -28,6 +28,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
+      <head>
+        <link
+          id="theme-link"
+          rel="stylesheet"
+          href="/themes/lara-dark-indigo/theme.css"
+        />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
