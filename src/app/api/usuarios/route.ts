@@ -1,4 +1,4 @@
-import { pool } from "@/db/dbconfig";
+import { conexiondb } from "@/db/dbconfig";
 import { RowDataPacket } from "mysql2";
 import { NextRequest } from "next/server";
 
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const [users] = await pool.query<RowDataPacket[]>(
+    const [users] = await conexiondb.query<RowDataPacket[]>(
       "SELECT u.usuario, u.empleado FROM usuarios u WHERE u.usuario=? AND u.password=?",
       [usuario, password]
     );

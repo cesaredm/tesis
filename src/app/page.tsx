@@ -12,18 +12,19 @@ import { useRouter } from "next/navigation";
 
 export default function Home() {
   const [credenciales, setCredenciales] = useState<{ usuario: string; password: string }>({ usuario: "", password: "" });
+  const [lazy, setLazy] = useState(false);
   const router = useRouter();
   const toast = useRef<Toast>(null);
 
   async function handleSignIn(e: React.FormEvent) {
     e.preventDefault();
-
+    setLazy(true);
     const result = await signIn("credentials", {
       usuario: credenciales?.usuario,
       password: credenciales?.password,
       redirect: false,
     });
-
+    setLazy(false);
     if (result?.error) {
       toast.current?.show({
         severity: "error",
@@ -71,7 +72,7 @@ export default function Home() {
                   }}
                 />
               </IconField>
-              <Button label="Acceder" icon="pi pi-lock-open" className="w-full" />
+              <Button label="Acceder" icon={lazy ? "pi pi-spin pi-spinner" : "pi pi-lock-open"} className="w-full" disabled={lazy} />
             </div>
           </form>
         </section>
