@@ -3,9 +3,10 @@ import { Inventario } from "@/components/facturacion/Inventario";
 
 export default function Facturacion() {
   return (
-    <div>
-      <Inventario />
-      <TablaFactura />
+    <div className="flex justify-center">
+      <div className="w-full lg:w-3/5">
+        <TablaFactura />
+      </div>
     </div>
   );
 }

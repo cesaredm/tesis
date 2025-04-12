@@ -62,7 +62,7 @@ export function MenuNav({ className, isStatic = false, children }: MenuNavProps)
             </Link>
           </div>
         </aside>
-        <section className="p-3">{children}</section>
+        <section className="p-3 w-full">{children}</section>
       </section>
     </div>
   );
