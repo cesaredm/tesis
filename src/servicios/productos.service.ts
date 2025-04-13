@@ -6,6 +6,10 @@ class ProductosService {
     const { data } = await axios.get("/inventario/productos");
     return data;
   }
+
+  crear(){}
+  actualizar(){}
+  eliminar(){}
 }
 
 export const productoService =  new ProductosService();
