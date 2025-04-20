@@ -6,12 +6,17 @@ import { auth } from "@/auth";
 import { z } from "zod";
 import { NextRequest } from "next/server";
 
+function parseNumber(value: any): number {
+  const number = Number(value);
+  return isNaN(number) ? 0 : number;
+}
+
 const productoSchema = z.object({
   codigoBarra: z.string().optional().nullable(),
   descripcion: z.string({ required_error: "La descripción es requerida" }),
   modelo: z.string().optional().nullable(),
-  precioCosto: z.number().optional().nullable(),
-  precioVenta: z.number({ required_error: "El precio de venta es requerido", invalid_type_error: "El precio de venta debe ser un número" }).positive({ message: "El precio de venta debe ser un número positivo" }),
+  precioCosto: z.preprocess(parseNumber, z.number().optional().nullable()),
+  precioVenta: z.preprocess(parseNumber, z.number({ required_error: "El precio de venta es requerido", invalid_type_error: "El precio de venta debe ser un número" }).positive({ message: "El precio de venta debe ser un número positivo" })),
   stock: z.number({ required_error: "El stock es requerido", invalid_type_error: "El stock debe ser un número" }).positive({ message: "El stock debe ser un número positivo" }),
   marca: z.number({ required_error: "La marca es requerida", invalid_type_error: "La marca debe ser un número" }).positive({ message: "La marca debe ser un número positivo" }).int("La marca debe ser un número entero"),
 });
@@ -65,7 +70,7 @@ export async function POST(req: NextRequest) {
 export async function PUT(req: Request) {
   try {
     const { id, codigoBarra, descripcion, modelo, precioCosto, precioVenta, stock, marca } = await req.json();
-    const parsedData = productosUpdateSchema.parse({id, codigoBarra, descripcion, modelo, precioCosto, precioVenta, stock, marca });
+    const parsedData = productosUpdateSchema.parse({ id, codigoBarra, descripcion, modelo, precioCosto, precioVenta, stock, marca });
     const [res] = await conexiondb.query<ResultSetHeader>("UPDATE productos SET codigoBarra = ?, descripcion = ?, modelo = ?, precioCosto = ?, precioVenta = ?, stock = ?, marca = ? WHERE id = ?", [
       parsedData.codigoBarra,
       parsedData.descripcion,

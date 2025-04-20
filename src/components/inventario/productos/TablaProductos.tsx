@@ -10,8 +10,10 @@ import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import { useEffect, useRef, useState } from "react";
-import {isAxiosError} from "@/utils/axiosConfig";
+import { isAxiosError } from "@/utils/axiosConfig";
 import { Toast } from "primereact/toast";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import Link from "next/link";
 
 export function TableProductos() {
   const { data: productos, isLoading } = useGetProductosQuery();
@@ -25,10 +27,22 @@ export function TableProductos() {
     eliminar(ids);
   }
 
+  function confirmarEliminacion() {
+    confirmDialog({
+      message: "¿Seguro que quiere eliminar estos productos?",
+      header: "Confirmar",
+      icon: "pi pi-exclamation-triangle",
+      acceptClassName: "p-button-danger",
+      acceptLabel: "Si",
+      rejectLabel: "No",
+      accept: () => eliminarHandler(),
+    });
+  }
+
   const HeaderTable = (
     <div className="flex justify-between items-center">
       <div>
-        <Button size="small" icon={isPending ? "pi pi-spin pi-spinner" : "pi pi-trash"} severity="danger" label="Eliminar" disabled={seleccion.length === 0 || isPending} onClick={eliminarHandler} />
+        <Button size="small" icon={isPending ? "pi pi-spin pi-spinner" : "pi pi-trash"} severity="danger" label="Eliminar" disabled={seleccion.length === 0 || isPending} onClick={confirmarEliminacion} />
       </div>
       <div>
         <IconField>
@@ -55,31 +69,43 @@ export function TableProductos() {
     );
   }
 
-  function tostada(data: RespuestaApi){
-    toast.current?.show(data)
+  function Acciones(row: Producto) {
+    return (
+      <div className="flex gap-1">
+        <Link href={{ pathname: "/work/inventario/productos/edit", query: { producto: JSON.stringify(row) } }}>
+          <Button icon="pi pi-pencil" size="small" severity="success" text />
+        </Link>
+      </div>
+    );
   }
 
-  useEffect(()=>{
-    if(isError){
-      if(isAxiosError(error)){
-        tostada(error.response?.data)
+  function tostada(data: RespuestaApi) {
+    toast.current?.show(data);
+  }
+
+  useEffect(() => {
+    if (isError) {
+      if (isAxiosError(error)) {
+        tostada(error.response?.data);
       }
     }
-    if(isSuccess){
-      tostada(data)
+    if (isSuccess) {
+      tostada(data);
     }
-
-  },[isError, isSuccess])
+  }, [isError, isSuccess]);
 
   return (
     <div>
       <Toast ref={toast} />
+      <ConfirmDialog />
       <DataTable
         value={productos}
         emptyMessage={isLoading ? <span className="pi pi-spin pi-spinner" /> : "No hay productos"}
         paginator
         rows={10}
         rowsPerPageOptions={[10, 50, 100, 200]}
+        paginatorTemplate={"FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"}
+        currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} productos"
         size="small"
         showGridlines
         className="w-full"
@@ -91,10 +117,12 @@ export function TableProductos() {
         onSelectionChange={(e) => setSeleccion(e.value)}
       >
         <Column selectionMode="multiple" headerStyle={{ width: "3rem" }} />
+        <Column body={Acciones} headerStyle={{ width: "3rem" }} />
         <Column field="codigoBarra" header="Codigo Barras" />
         <Column field="descripcion" header="Descripción" />
         <Column field="precioCosto" header="PrecioCosto" body={PrecioCostoTable} />
         <Column field="precioVenta" header="Precio venta" body={PrecioVentaTable} />
+        <Column field="modelo" header="Modelo" />
         <Column field="stock" header="Existencia" />
         <Column field="marca" header="Marca" />
       </DataTable>

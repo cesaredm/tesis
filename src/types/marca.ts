@@ -6,3 +6,7 @@ export interface Marca {
 export interface MarcaSave {
   nombre: string;
 }
+
+export interface MarcaUpdate extends MarcaSave {
+  id: number;
+}
