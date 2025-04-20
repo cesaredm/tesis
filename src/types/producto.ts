@@ -2,6 +2,7 @@ export interface Producto {
   id: number;
   codigoBarra: string;
   descripcion: string;
+  modelo: string;
   precioCosto: number;
   precioVenta: number;
   stock: number;
@@ -9,4 +10,16 @@ export interface Producto {
   marca: string;
 }
 
-export interface ProductoSave {}
+export interface ProductoSave {
+  codigoBarra?: string;
+  descripcion: string;
+  modelo?: string;
+  precioCosto?: number;
+  precioVenta: number;
+  stock: number;
+  marca: number;
+}
+
+export interface ProductoUpdate extends ProductoSave {
+  id: number;
+}

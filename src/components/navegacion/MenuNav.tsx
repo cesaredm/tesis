@@ -25,7 +25,7 @@ export function MenuNav({ className, isStatic = false, children }: MenuNavProps)
       icon: "pi pi-shopping-cart",
       href: "/work/facturacion",
     },
-    { label: "Productos", icon: "pi pi-box", href: "/work/inventario" },
+    { label: "inventario", icon: "pi pi-box", href: "/work/inventario" },
     { label: "Clientes", icon: "pi pi-users", href: "/work/clientes" },
     { label: "Reportes", icon: "pi pi-chart-bar", href: "/work/reportes" },
     { label: "Configuración", icon: "pi pi-cog", href: "/work/configuracion" },
@@ -48,7 +48,18 @@ export function MenuNav({ className, isStatic = false, children }: MenuNavProps)
           <ul className="list-none p-2 m-0">
             {menuItems.map((item, index) => (
               <li key={index} className="mb-2 hover:bg-surface-hover rounded-lg">
-                <Link href={item.href} className={classNames("flex items-center", collapsed ? "justify-center" : "", "cursor-pointer p-3 border-round-lg hover:bg-surface-hover transition-colors transition-duration-150 text-color", "no-underline", pathname.includes(item.href) ? "border-l-2 border-primary bg-primary/30 rounded-lg": "")}>
+                <Link
+                  href={item.href}
+                  className={classNames(
+                    "flex items-center",
+                    collapsed ? "justify-center" : "",
+                    "cursor-pointer p-3 border-round-lg hover:bg-surface-hover transition-colors transition-duration-150 text-color",
+                    "no-underline",
+                    pathname === item.href || (pathname.startsWith(`${item.href}/`) && item.href !== "/work")
+                      ? "border-l-2 border-primary bg-primary/30 rounded-lg"
+                      : ""
+                  )}
+                >
                   <i className={classNames("text-xl", item.icon)}></i>
                   {!collapsed && <span className="ml-3 font-medium">{item.label}</span>}
                 </Link>
