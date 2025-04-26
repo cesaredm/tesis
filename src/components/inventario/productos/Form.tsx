@@ -86,7 +86,7 @@ export function Form({ producto }: { producto?: Producto }) {
       toast.current?.show({
         severity: isAxiosError(errorUpdate) ? errorUpdate.response?.data.severity : "warn",
         summary: isAxiosError(errorUpdate) ? errorUpdate.response?.data.summary : "Error",
-        detail: isAxiosError(errorUpdate) ? errorUpdate.response?.data.detail + ' - ' + errorUpdate.response?.data.error : "Error al actualizar el producto",
+        detail: isAxiosError(errorUpdate) ? errorUpdate.response?.data.detail + " - " + errorUpdate.response?.data.error : "Error al actualizar el producto",
         life: 3000,
       });
     }
@@ -107,8 +107,10 @@ export function Form({ producto }: { producto?: Producto }) {
   }, [producto]);
 
   return (
-    <div className="border border-surface-border p-2 rounded-lg bg-surface-card">
+    <div className="">
       <Toast ref={toast} />
+      <h1 className="text-2xl font-bold">Crear Producto</h1>
+      <p className="text-sm text-gray-500">Formulario para crear un nuevo producto.</p>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-1">
           <BoxForm>
@@ -175,7 +177,7 @@ export function Form({ producto }: { producto?: Producto }) {
           />
         </div>
         <div className="flex gap-1 justify-end mt-2">
-          <Button label="Limpiar" icon="pi pi-eraser" size="small" text type="button" onClick={()=>reset()} />
+          <Button label="Limpiar" icon="pi pi-eraser" size="small" text type="button" onClick={() => reset()} />
           <Button label={producto ? "Actualizar" : "Guardar"} icon={isPending || isPendingUpdate ? "pi pi-spin pi-spinner" : "pi pi-check"} size="small" type="submit" disabled={isPending || isPendingUpdate} />
         </div>
       </form>

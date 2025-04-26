@@ -91,6 +91,8 @@ export function FormularioMarca({ marca }: { marca?: MarcaUpdate }) {
     <div>
       <Toast ref={toast} position="top-center" />
       <div>
+        <h1 className="text-2xl font-bold">Crear Marca</h1>
+        <p className="text-sm text-gray-500">Formulario para crear una nueva Marca.</p>
         <form action="" onSubmit={handleSubmit(hanlderSubmit)}>
           <div className="flex flex-col gap-1">
             <div className="flex flex-col">

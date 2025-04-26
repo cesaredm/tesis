@@ -39,8 +39,12 @@ export function HeaderLayout() {
           <Link href={"/work/inventario/marcas"}>
             <ButtonSection title="Marcas" icon="pi pi-tag" pathname={pathname} />
           </Link>
-          <ButtonSection title="Proveedores" icon="pi pi-truck" pathname={pathname} />
-          <ButtonSection title="Pedidos" icon="pi pi-file" pathname={pathname} />
+          <Link href={"/work/inventario/proveedores"}>
+            <ButtonSection title="Proveedores" icon="pi pi-truck" pathname={pathname} />
+          </Link>
+          <Link href={"/work/inventario/pedidos"}>
+            <ButtonSection title="Pedidos" icon="pi pi-file" pathname={pathname} />
+          </Link>
         </article>
       </header>
     </div>
