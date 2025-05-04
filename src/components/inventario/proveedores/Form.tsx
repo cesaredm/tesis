@@ -1,7 +1,7 @@
 "use client";
 
-import { useGuardarProveedorMutation } from "@/hooks/proveedores";
-import { Proveedor } from "@/types/proveedor";
+import { useActualizarProveedorMutation, useGuardarProveedorMutation } from "@/hooks/proveedores";
+import { Proveedor, ProveedorSave, ProveedorUpdate } from "@/types";
 import { isAxiosError } from "@/utils/axiosConfig";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
@@ -16,15 +16,22 @@ export function Form({ proveedor }: { proveedor?: Proveedor }) {
     handleSubmit,
     setValue,
     reset,
-  } = useForm<Proveedor>();
+  } = useForm<ProveedorSave | ProveedorUpdate>();
   const { mutate: guardarProveedor, isPending, isSuccess, isError, error, data } = useGuardarProveedorMutation();
+  const { mutate: actualizarProveedor, isPending: isPendingUpdate, isSuccess: isSuccessUpdate, isError: isErrorUpdate, error: errorUpdate, data: dataUpdate } = useActualizarProveedorMutation();
 
   const toast = useRef<Toast>(null);
 
-  const onSubmit = (data: Proveedor) => {
+  const onSubmit = (data: ProveedorSave | ProveedorUpdate) => {
     if (!proveedor) {
-      guardarProveedor(data);
+      guardarProveedor(data as ProveedorSave);
+    } else {
+      actualizarProveedor(data as ProveedorUpdate);
     }
+  };
+
+  const limpiar = () => {
+    reset();
   };
 
   useEffect(() => {
@@ -51,11 +58,46 @@ export function Form({ proveedor }: { proveedor?: Proveedor }) {
     }
   }, [isSuccess, isError]);
 
+  useEffect(() => {
+    if (proveedor) {
+      setValue("id", proveedor.id);
+      setValue("nombre", proveedor.nombre);
+      setValue("telefono", proveedor.telefono);
+      setValue("cuentaBancaria", proveedor.cuentaBancaria);
+      setValue("vendedor", proveedor.vendedor);
+      setValue("telefonoVendedor", proveedor.telefonoVendedor);
+    }
+  }, [proveedor]);
+
+  useEffect(() => {
+    if (isSuccessUpdate) {
+      reset();
+      toast.current?.show(dataUpdate);
+    }
+    if (isErrorUpdate) {
+      if (isAxiosError(errorUpdate)) {
+        toast.current?.show({
+          severity: errorUpdate.response?.data.severity,
+          summary: errorUpdate.response?.data.summary,
+          detail: errorUpdate.response?.data.detail + " " + errorUpdate.response?.data.error,
+          life: 3000,
+        });
+      } else {
+        toast.current?.show({
+          severity: "error",
+          summary: "Error",
+          detail: "Error al actualizar el proveedor",
+          life: 3000,
+        });
+      }
+    }
+  }, [isSuccessUpdate, isErrorUpdate]);
+
   return (
     <div>
       <Toast ref={toast} />
-      <h1 className="text-2xl font-bold">Crear Proveedor</h1>
-      <p className="text-sm text-gray-500">Formulario para crear un nuevo proveedor.</p>
+      <h1 className="text-2xl font-bold">{proveedor ? "Editar Proveedor" : "Nuevo Proveedor"}</h1>
+      <p className="text-sm text-gray-500">Formulario para crear o Editar proveedores.</p>
       <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 gap-1">
         <section className="grid grid-cols-1 md:grid-cols-2 gap-1">
           <div className="flex flex-col gap-2">
@@ -94,8 +136,8 @@ export function Form({ proveedor }: { proveedor?: Proveedor }) {
           </div>
         </section>
         <section className="flex justify-end gap-1">
-          <Button label="Limpiar" icon="pi pi-erase" size="small" text type="button" onClick={() => reset()} disabled={isPending} />
-          <Button label="Guardar" icon={isPending ? "pi pi-spin pi-spinner" : "pi pi-check"} size="small" type="submit" disabled={isPending} />
+          <Button label="Limpiar" icon="pi pi-erase" size="small" text type="button" onClick={limpiar} disabled={isPending} />
+          <Button label={proveedor ? "Actualizar" : "Guardar"} icon={isPending || isPendingUpdate ? "pi pi-spin pi-spinner" : "pi pi-check"} size="small" type="submit" disabled={isPending || isPendingUpdate} />
         </section>
       </form>
     </div>

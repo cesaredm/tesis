@@ -62,3 +62,15 @@ export async function PATCH(req: Request) {
     return Response.json(respuestaError({ error: "Error al actualizar el proveedor" }), { status: 400 });
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const { id } = await req.json();
+    await conexiondb.query("DELETE FROM proveedores WHERE id = ?", [id]);
+    return Response.json(respuesta(), { status: 200 });
+  } catch (e: any) {
+    console.log(e);
+    if (e.errno === 1451) return Response.json(respuestaError({ error: "No se puede eliminar el proveedor porque esta siendo usada en un producto" }), { status: 400 });
+    return Response.json(respuestaError(), { status: 404 });
+  }
+}

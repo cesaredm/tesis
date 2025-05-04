@@ -4,7 +4,7 @@ import { useEliminarProductoMutation, useGetProductosQuery } from "@/hooks/produ
 import { Producto, RespuestaApi } from "@/types";
 import { formatDecimal } from "@/utils/helpers";
 import { Column } from "primereact/column";
-import { DataTable } from "primereact/datatable";
+import { DataTable, DataTableFilterMeta } from "primereact/datatable";
 import { Button } from "primereact/button";
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
@@ -14,11 +14,15 @@ import { isAxiosError } from "@/utils/axiosConfig";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import Link from "next/link";
+import { FilterMatchMode } from "primereact/api";
 
 export function TableProductos() {
   const { data: productos, isLoading } = useGetProductosQuery();
   const [seleccion, setSeleccion] = useState<Producto[]>([]);
   const { mutate: eliminar, isPending, error, isError, isSuccess, data } = useEliminarProductoMutation();
+  const [filters, setFilters] = useState<DataTableFilterMeta>({
+    global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  });
   const toast = useRef<Toast>(null);
 
   function eliminarHandler() {
@@ -39,6 +43,13 @@ export function TableProductos() {
     });
   }
 
+  function onGlobalFilterChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+    setFilters((prev) => {
+      return { ...prev, global: { value, matchMode: FilterMatchMode.CONTAINS } };
+    });
+  }
+
   const HeaderTable = (
     <div className="flex justify-between items-center">
       <div>
@@ -47,7 +58,7 @@ export function TableProductos() {
       <div>
         <IconField>
           <InputIcon className="pi pi-search" />
-          <InputText placeholder="Buscar..." />
+          <InputText placeholder="Buscar..." onChange={onGlobalFilterChange} />
         </IconField>
       </div>
     </div>
@@ -115,6 +126,8 @@ export function TableProductos() {
         selectionMode={"multiple"}
         selection={seleccion}
         onSelectionChange={(e) => setSeleccion(e.value)}
+        filters={filters}
+        globalFilterFields={["codigoBarra", "descripcion", "modelo", "marca"]}
       >
         <Column selectionMode="multiple" headerStyle={{ width: "3rem" }} />
         <Column body={Acciones} headerStyle={{ width: "3rem" }} />

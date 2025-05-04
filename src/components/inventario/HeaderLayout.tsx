@@ -7,8 +7,11 @@ import { classNames } from "primereact/utils";
 const apartado = {
   "/work/inventario": "Resumen",
   "/work/inventario/productos": "Productos",
+  "/work/inventario/productos/lista": "Productos",
   "/work/inventario/marcas": "Marcas",
+  "/work/inventario/marcas/lista": "Marcas",
   "/work/inventario/proveedores": "Proveedores",
+  "/work/inventario/proveedores/lista": "Proveedores",
   "/work/inventario/pedidos": "Pedidos",
 };
 

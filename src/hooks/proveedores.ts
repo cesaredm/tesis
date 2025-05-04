@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { Proveedor } from "@/types/proveedor";
+import { Proveedor, ProveedorSave, ProveedorUpdate } from "@/types/proveedor";
 import { proveedoresService } from "@/servicios/proveedores.service";
 
 export function useGetProveedoresQuery() {
@@ -16,7 +16,35 @@ export function useGetProveedoresQuery() {
 export function useGuardarProveedorMutation() {
   const queryClient = useQueryClient();
   const mutation = useMutation({
-    mutationFn: (proveedor: Proveedor) => proveedoresService.guardarProveedor(proveedor),
+    mutationFn: (proveedor: ProveedorSave) => proveedoresService.guardarProveedor(proveedor),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["proveedores"] });
+    },
+  });
+
+  return {
+    ...mutation,
+  };
+}
+
+export function useActualizarProveedorMutation() {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: (proveedor: ProveedorUpdate) => proveedoresService.actualizarProveedor(proveedor),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["proveedores"] });
+    },
+  });
+
+  return {
+    ...mutation,
+  };
+}
+
+export function useEliminarProveedorMutation() {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: (id: number) => proveedoresService.eliminarProveedor(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["proveedores"] });
     },
