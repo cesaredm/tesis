@@ -7,6 +7,7 @@ import { Avatar } from "primereact/avatar";
 import SwitchTheme from "../SwitchTheme";
 import { usePathname } from "next/navigation";
 import { AvatarUser } from "./Avatar";
+import MenuMobile from "./MenuMobile";
 
 interface MenuNavProps {
   className?: string;
@@ -32,7 +33,7 @@ export function MenuNav({ className, isStatic = false, children }: MenuNavProps)
   ];
 
   return (
-    <div className="flex flex-col sticky top-0 z-50">
+    <div className="flex flex-col sticky top-0 z-50 min-w-[100vw] overflow-hidden">
       <div className="flex justify-between items-center pt-2 pb-2 pl-4 pr-4 w-full bg-surface-card border border-surface-border">
         <div className="flex justify-between items-center w-[15rem]">
           <h3 className="text-lg font-bold">Mega Hogar</h3>
@@ -55,9 +56,7 @@ export function MenuNav({ className, isStatic = false, children }: MenuNavProps)
                     collapsed ? "justify-center" : "",
                     "cursor-pointer p-3 border-round-lg hover:bg-surface-hover transition-colors transition-duration-150 text-color",
                     "no-underline",
-                    pathname === item.href || (pathname.startsWith(`${item.href}/`) && item.href !== "/work")
-                      ? "border-l-2 border-primary bg-primary/30 rounded-lg"
-                      : ""
+                    pathname === item.href || (pathname.startsWith(`${item.href}/`) && item.href !== "/work") ? "border-l-2 border-primary bg-primary/30 rounded-lg" : ""
                   )}
                 >
                   <i className={classNames("text-xl", item.icon)}></i>
