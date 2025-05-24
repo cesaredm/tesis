@@ -18,18 +18,18 @@ export function Totales() {
   }, [reloadView]);
 
   return (
-    <div className="grid grid-cols-3">
+    <div className="grid grid-cols-3 text-right">
       <article>
         <p className="font-bold text-sm">Subtotal</p>
-        <p className="font-bold">{formatDecimal(totales.subtotal)}</p>
+        <p className="font-bold text-2xl text-right">{formatDecimal(totales.subtotal)}</p>
       </article>
       <article>
         <p className="font-bold text-sm">Descuentos</p>
-        <p className="font-bold">{formatDecimal(totales.descuento)}</p>
+        <p className="font-bold text-2xl text-right">{formatDecimal(totales.descuento)}</p>
       </article>
       <article>
         <p className="font-bold text-sm">Total</p>
-        <p className="font-bold">{formatDecimal(totales.total)}</p>
+        <p className="font-bold text-2xl text-right">{formatDecimal(totales.total)}</p>
       </article>
     </div>
   );

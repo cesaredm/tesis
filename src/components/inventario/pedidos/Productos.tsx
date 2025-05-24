@@ -104,6 +104,7 @@ export function Productos() {
         producto: producto.id,
         precio: producto.precioCosto,
         descripcion: producto.descripcion,
+        stock: producto.stock,
         marca: producto.marca,
         cantidad,
         importe,

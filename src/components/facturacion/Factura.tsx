@@ -14,12 +14,17 @@ import { Totales } from "./Totales";
 import { useRef, useState } from "react";
 import { Toast } from "primereact/toast";
 import { formatDecimal } from "@/utils/helpers";
+import { OverlayPanel } from "primereact/overlaypanel";
+import { Dropdown } from "primereact/dropdown";
+import { InputNumber } from "primereact/inputnumber";
 
 export function TablaFactura() {
   const { detalles, setReloadView, reloadView } = useFacturaStore((state) => state);
   const { data: inventario } = useGetProductosQuery();
   const [seleccion, setSeleccion] = useState<DetalleSave[]>([]);
   const toast = useRef<Toast>(null);
+  const opAdd = useRef<OverlayPanel>(null);
+  const opDescuento = useRef<OverlayPanel>(null);
 
   function agregarProducto(producto: Producto, cantidad: number) {
     /*const filter = inventario?.find((item) => item.id === producto.id);
@@ -27,7 +32,7 @@ export function TablaFactura() {
 
     const detalleExistente = detalles.get(producto.id);
     if (detalleExistente) {
-      if(detalleExistente.stock < (cantidad + detalleExistente.cantidad)){
+      if (detalleExistente.stock < cantidad + detalleExistente.cantidad) {
         toast.current?.show({ severity: "error", summary: "Error", detail: "Producto no cuenta con suficiente stock para la venta.", life: 3000 });
         return;
       }
@@ -75,6 +80,18 @@ export function TablaFactura() {
     });
     setReloadView(reloadView + 1);
     setSeleccion([]);
+  }
+
+  function AccionesTemplate(row: DetalleSave) {
+    return (
+      <div className="p-buttonset">
+        <ButtonGroup>
+          <Button icon="pi pi-plus" size="small" onClick={(e)=>opAdd.current?.toggle(e)} />
+          <Button icon="pi pi-minus" size="small" />
+          <Button icon="pi pi-tag" size="small" onClick={(e)=>opDescuento.current?.toggle(e)} />
+        </ButtonGroup>
+      </div>
+    );
   }
 
   function DescripcionTable(row: DetalleSave) {
@@ -126,7 +143,30 @@ export function TablaFactura() {
   return (
     <div>
       <Toast ref={toast} />
-      <DataTable value={Array.from(detalles.values())} selectionMode={"multiple"} header={Header} footer={FooterTable} selection={seleccion} onSelectionChange={({ value }) => setSeleccion(value)} emptyMessage="Factura vacia.">
+      <OverlayPanel ref={opAdd}>
+        <form action="">
+          <div>
+            <label htmlFor="">Cantidad</label>
+            <div className="p-inputgroup">
+              <InputNumber mode="decimal" minFractionDigits={2} maxFractionDigits={2} locale="en-ni" name="cantidad" autoFocus required />
+              <Button icon="pi pi-check" />
+            </div>
+          </div>
+        </form>
+      </OverlayPanel>
+      <OverlayPanel ref={opDescuento}>
+        <form action="">
+          <div>
+            <label htmlFor="">Descuento</label>
+            <div className="p-inputgroup">
+              <InputNumber mode="decimal" minFractionDigits={2} maxFractionDigits={2} locale="en-ni" name="descuento" autoFocus required />
+              <Button icon="pi pi-check" />
+            </div>
+          </div>
+        </form>
+      </OverlayPanel>
+      <DataTable value={Array.from(detalles.values())} selectionMode={"multiple"} header={Header} footer={FooterTable} selection={seleccion} onSelectionChange={({ value }) => setSeleccion(value)} emptyMessage="Factura vacia." showGridlines>
+        <Column body={AccionesTemplate} headerStyle={{width: "12rem"}} />
         <Column body={DescripcionTable} header={"Descripción"} />
       </DataTable>
     </div>

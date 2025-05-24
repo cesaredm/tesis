@@ -30,6 +30,7 @@ export interface DetallesPedido {
 export interface DetallesPedidoSave {
   producto: number;
   descripcion: string;
+  stock: number;
   marca: string;
   cantidad: number;
   precio: number;
