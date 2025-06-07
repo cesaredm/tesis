@@ -7,8 +7,8 @@ export function Totales() {
 
   const calcularTotales = useCallback(() => {
     const d = Array.from(detalles.values());
-    const subtotal = d.reduce((acc, item) => acc + item.importe, 0);
-    const descuento = d.reduce((acc, item) => acc + (item.precioOriginal - item.precio), 0);
+    const subtotal = d.reduce((acc, item) => acc + (item.precioOriginal * item.cantidad), 0);
+    const descuento = d.reduce((acc, item) => acc + ((item.precioOriginal - item.precio) * item.cantidad), 0);
     const total = subtotal - descuento;
     setTotales({ subtotal, descuento, total });
   }, [reloadView, setTotales]);

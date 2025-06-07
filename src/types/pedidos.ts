@@ -2,8 +2,10 @@ export interface Pedido {
   id: number;
   fecha: string;
   proveedor: string;
+  idProveedor: number;
   estado: string;
   detalles: DetallesPedido[];
+  total: number;
 }
 
 export interface PedidoSave {
