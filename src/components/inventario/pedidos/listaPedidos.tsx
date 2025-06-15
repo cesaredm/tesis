@@ -17,6 +17,7 @@ import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import { Spinner } from "@/components/Spinner";
+import Link from "next/link";
 
 export function TablaPedidos() {
   const { data: pedidos, isLoading } = useGetPedidosQuery();
@@ -45,7 +46,9 @@ export function TablaPedidos() {
   function AccionesTemplate(row: Pedido) {
     return (
       <div>
-        <Button icon={"pi pi-money-bill"} size={"small"} severity={"success"} text />
+        <Link href={"/work/inventario/pedidos/pagoPedido?pedido=" + row.id}>
+          <Button icon={"pi pi-money-bill"} size={"small"} severity={"success"} text />
+        </Link>
       </div>
     );
   }
@@ -80,7 +83,7 @@ export function TablaPedidos() {
         filters={filters}
         globalFilterFields={["nombreProveedor", "id"]}
         header={HeaderTable}
-        emptyMessage={isLoading ? <Spinner /> : 'No hay pedidos'}
+        emptyMessage={isLoading ? <Spinner /> : "No hay pedidos"}
       >
         <Column expander={true} headerStyle={{ width: "3rem" }} />
         <Column body={AccionesTemplate} headerStyle={{ width: "3rem" }} />
