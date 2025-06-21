@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { pedidosService } from "@/servicios/pedidos.service";
-import { PedidoSave, PedidoUpdate, DetallesPedidoSave } from "@/types";
+import { PedidoSave, PedidoUpdate, DetallesPedidoSave, PagoPedidoSave } from "@/types";
 
 export function useGetPedidosQuery() {
   const pedidos = useQuery({
@@ -31,6 +31,21 @@ export function useActualizarPedidoMutation() {
 
   const mutation = useMutation({
     mutationFn: (pedido: PedidoUpdate) => pedidosService.actualizarPedido(pedido),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pedidos"] });
+    },
+  });
+
+  return {
+    ...mutation,
+  };
+}
+
+export function useGuardarPagoPedidoMutation() {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (pago: PagoPedidoSave) => pedidosService.pagarPedido(pago),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pedidos"] });
     },

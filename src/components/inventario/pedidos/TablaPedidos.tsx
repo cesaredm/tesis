@@ -3,7 +3,6 @@ import {
   DataTable,
   DataTableExpandedRows,
   DataTableFilterMeta,
-  DataTableFilterMetaData,
   DataTableValueArray,
 } from "primereact/datatable";
 import { useGetPedidosQuery } from "@/hooks/pedidos";
@@ -18,6 +17,7 @@ import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import { Spinner } from "@/components/Spinner";
 import Link from "next/link";
+import { Tag } from "primereact/tag";
 
 export function TablaPedidos() {
   const { data: pedidos, isLoading } = useGetPedidosQuery();
@@ -52,6 +52,30 @@ export function TablaPedidos() {
       </div>
     );
   }
+
+  function EstadoTemplate(row: Pedido){
+    return (
+      <div>
+        <Tag severity={row.estado == "Pendiente" ? "warning" : "success"} value={row.estado} />
+      </div>
+    )
+  }
+   function SaldoTemplate(row: Pedido) {
+    console.log(row)
+    
+    function saldo():number{
+      if (!row.pagado) {
+        return row.total;
+      }
+      return row.total - row.pagado;
+    }
+
+    return (
+      <div>
+        {formatDecimal(saldo())}
+      </div>
+    );
+   }
 
   function onChangeGlobalFilter(e: React.ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
@@ -88,10 +112,11 @@ export function TablaPedidos() {
         <Column expander={true} headerStyle={{ width: "3rem" }} />
         <Column body={AccionesTemplate} headerStyle={{ width: "3rem" }} />
         <Column header={"# Pedido"} field={"id"} sortable />
-        <Column header={"Fecha"} field={"fecha"} sortable />
+        <Column header={"Fecha"} field={"f"} sortable />
         <Column header={"Proveedor"} field={"nombreProveedor"} sortable />
-        <Column header={"estado"} field={"estado"} sortable />
+        <Column header={"Estado"} field={"estado"} body={EstadoTemplate} sortable />
         <Column header={"Total"} field={"total"} body={(row: Pedido) => formatDecimal(row.total)} />
+        <Column header="Saldo" body={SaldoTemplate} />
       </DataTable>
     </div>
   );

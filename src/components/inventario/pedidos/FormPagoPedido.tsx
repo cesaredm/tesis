@@ -1,15 +1,13 @@
 "use client";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Calendar } from "primereact/calendar";
 import { InputNumber } from "primereact/inputnumber";
 import { Button } from "primereact/button";
-
-interface PagoPedido {
-  pedido: number;
-  monto: number;
-  fecha: Date;
-}
+import { useGuardarPagoPedidoMutation, useGuardarPedidoMutation } from "@/hooks/pedidos";
+import { PagoPedidoSave } from "@/types";
+import { Toast } from "primereact/toast";
+import { toastError, toastSuccess } from "@/utils/formatToast";
 
 function BoxForm({ children }: { children: React.ReactNode }) {
   return (
@@ -20,20 +18,33 @@ function BoxForm({ children }: { children: React.ReactNode }) {
 }
 
 export function FormPagoPedido({ pedido }: { pedido: number }) {
-  const { control, handleSubmit, formState: { errors }, setValue, reset } = useForm<PagoPedido>({
+  const {mutate: guardarPago, isPending, isSuccess, isError, error, data} = useGuardarPagoPedidoMutation()
+  const { control, handleSubmit, formState: { errors }, setValue, reset } = useForm<PagoPedidoSave>({
     defaultValues: {
       pedido: Number(pedido),
       fecha: new Date(),
     },
   });
+  const toast = useRef<Toast>(null);
 
-  function onSubmit(data: PagoPedido) {
-    console.log(data)
+  function onSubmit(data: PagoPedidoSave) {
+    guardarPago(data);
   }
+
+  useEffect(() => {
+    if (isSuccess) {
+     reset() 
+      toast.current?.show(toastSuccess(data))
+    }
+    if (isError) {
+      toast.current?.show(toastError(error))
+    }
+  }, [isSuccess, isError]);
 
   return (
     <div>
       <div>
+        <Toast ref={toast} />
         <form action="" onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-1">
           <div className={"grid grid-cols-1 md:grid-cols-2 gap-1"}>
             <Controller
@@ -45,7 +56,7 @@ export function FormPagoPedido({ pedido }: { pedido: number }) {
               render={({ field }) => (
                 <BoxForm>
                   <label>Fecha</label>
-                  <Calendar value={field.value} onChange={(e) => field.onChange(e.value)} showIcon locale={"es"} />
+                  <Calendar value={field.value as Date} onChange={(e) => field.onChange(e.value)} showIcon locale={"es"} />
                   {errors.fecha && <span className={'text-red-500'}>{errors.fecha.message}</span>}
                 </BoxForm>
               )}

@@ -1,5 +1,4 @@
-import { TablaPedidos } from "@/components/inventario/pedidos/listaPedidos";
-
+import { TablaPedidos } from "@/components/inventario/pedidos/TablaPedidos"
 export default function ListaPedidosPage(){
   return(
     <div>

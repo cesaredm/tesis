@@ -102,7 +102,7 @@ export async function PATCH(req: Request) {
 
 export async function GET() {
   try {
-    const [pedidos] = await conexiondb.query<RowDataPacket[]>("SELECT p.id,DATE_FORMAT(p.fecha, '%d-%m-%Y %r') fecha, p.estado, pr.nombre nombreProveedor, pr.id idProveedor,sum(d.importe) total FROM pedidos p inner join proveedores pr on p.proveedor = pr.id inner join productoproveedor d on p.id = d.pedido group by p.id");
+    const [pedidos] = await conexiondb.query<RowDataPacket[]>("SELECT p.*,DATE_FORMAT(p.fecha, '%d-%m-%Y %r') f FROM pedidostienda p");
     for (const pedido of pedidos) {
       const [detalles] = await conexiondb.query<RowDataPacket[]>("SELECT pp.*, p.descripcion, m.nombre marca FROM productoproveedor pp inner join productos p on pp.producto=p.id inner join marca m on p.marca=m.id WHERE pp.pedido = ?", [pedido.id]);
       pedido.detalles = detalles;

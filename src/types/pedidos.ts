@@ -6,6 +6,7 @@ export interface Pedido {
   estado: string;
   detalles: DetallesPedido[];
   total: number;
+  pagado?: number;
 }
 
 export interface PedidoSave {
@@ -37,4 +38,17 @@ export interface DetallesPedidoSave {
   cantidad: number;
   precio: number;
   importe: number;
+}
+export interface PagoPedidoSave {
+  pedido: number;
+  monto: number;
+  fecha: Date | string;
+}
+
+export interface PagoPedido {
+  id: number;
+  pedido: number;
+  monto: number;
+  fecha: string | Date;
+  estado: string;
 }
