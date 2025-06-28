@@ -15,6 +15,8 @@ import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import Link from "next/link";
 import { FilterMatchMode } from "primereact/api";
+import { Menu } from "primereact/menu";
+import { useRouter } from "next/navigation";
 
 export function TableProductos() {
   const { data: productos, isLoading } = useGetProductosQuery();
@@ -23,7 +25,33 @@ export function TableProductos() {
   const [filters, setFilters] = useState<DataTableFilterMeta>({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
+  const [productoSeleccionado, setProductoSeleccionado] = useState<Producto | null>(null);
+  const opcionesProductoRef = useRef<Menu>(null);
   const toast = useRef<Toast>(null);
+  const router = useRouter()
+
+  const itemsOpcionesProducto = [
+    {
+      label: "Editar",
+      icon: "pi pi-pencil",
+      command: () => {
+        router.push(`/work/inventario/productos/edit?producto=${JSON.stringify(productoSeleccionado)}`)
+      },
+    },
+    {
+      label: "Crear movimiento",
+      icon: "pi pi-chevron-right",
+      command: () => {
+      },
+    },
+    {
+      label: "Kardex",
+      icon: "pi pi-chart-bar",
+      command: () => {
+        if(productoSeleccionado) router.push(`/work/inventario/kardex?id=${productoSeleccionado.id}&n=${productoSeleccionado.descripcion}`);
+      },
+    },
+  ];
 
   function eliminarHandler() {
     if (seleccion.length === 0) return;
@@ -50,10 +78,16 @@ export function TableProductos() {
     });
   }
 
+  function onSeleccionProducto(e: React.MouseEvent, producto: Producto) {
+    opcionesProductoRef.current?.toggle(e);
+    setProductoSeleccionado(producto);
+  }
+
   const HeaderTable = (
     <div className="flex justify-between items-center">
       <div>
-        <Button size="small" icon={isPending ? "pi pi-spin pi-spinner" : "pi pi-trash"} severity="danger" label="Eliminar" disabled={seleccion.length === 0 || isPending} onClick={confirmarEliminacion} />
+        <Button size="small" icon={isPending ? "pi pi-spin pi-spinner" : "pi pi-trash"} severity="danger"
+                label="Eliminar" disabled={seleccion.length === 0 || isPending} onClick={confirmarEliminacion} />
       </div>
       <div>
         <IconField>
@@ -83,9 +117,7 @@ export function TableProductos() {
   function Acciones(row: Producto) {
     return (
       <div className="flex gap-1">
-        <Link href={{ pathname: "/work/inventario/productos/edit", query: { producto: JSON.stringify(row) } }}>
-          <Button icon="pi pi-pencil" size="small" severity="success" text />
-        </Link>
+          <Button icon="pi pi-cog" size="small" text onClick={(e) => onSeleccionProducto(e, row)} />
       </div>
     );
   }
@@ -105,10 +137,12 @@ export function TableProductos() {
     }
   }, [isError, isSuccess]);
 
+
   return (
     <div>
       <Toast ref={toast} />
       <ConfirmDialog />
+      <Menu model={itemsOpcionesProducto} popup id={"popup_menu_productos"} ref={opcionesProductoRef} />
       <DataTable
         value={productos}
         emptyMessage={isLoading ? <span className="pi pi-spin pi-spinner" /> : "No hay productos"}

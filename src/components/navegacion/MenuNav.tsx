@@ -34,7 +34,7 @@ export function MenuNav({ className, isStatic = false, children }: MenuNavProps)
 
   return (
     <div className="flex flex-col sticky top-0 z-50 min-w-[100vw] overflow-hidden">
-      <div className="flex justify-between items-center pt-2 pb-2 pl-4 pr-4 w-full bg-surface-card border border-surface-border">
+      <div className="flex justify-between items-center pt-1 pb-1 pl-4 pr-4 bg-surface-card border border-surface-border">
         <div className="flex justify-between items-center w-[15rem]">
           <h3 className="text-lg font-bold">Mega Hogar</h3>
           <Button icon="pi pi-bars" onClick={() => setCollapsed(!collapsed)} className="p-button-text p-button-rounded" />
@@ -45,7 +45,7 @@ export function MenuNav({ className, isStatic = false, children }: MenuNavProps)
         </div>
       </div>
       <section className="flex">
-        <aside className={classNames("bg-surface-card min-h-[93.5vh] transition-all duration-300 border-r border-surface-border flex flex-col justify-between pb-4", collapsed ? "w-[5rem]" : "w-[15rem]")}>
+        <aside className={classNames("bg-surface-card min-h-[94vh] transition-all duration-300 border-r border-surface-border flex flex-col justify-between pb-4", collapsed ? "w-[5rem]" : "w-[15rem]")}>
           <ul className="list-none p-2 m-0">
             {menuItems.map((item, index) => (
               <li key={index} className="mb-2 hover:bg-surface-hover rounded-lg">

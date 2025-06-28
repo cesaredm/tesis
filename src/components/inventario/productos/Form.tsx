@@ -114,7 +114,7 @@ export function Form({ producto }: { producto?: Producto }) {
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-1">
           <BoxForm>
-            <label htmlFor="">Codigo Barras</label>
+            <label htmlFor="">Código Barras</label>
             <InputText keyfilter={"alphanum"} {...register("codigoBarra")} />
           </BoxForm>
           <BoxForm>

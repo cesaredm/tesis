@@ -58,3 +58,15 @@ export function useEliminarProductoMutation() {
     ...mutation,
   };
 }
+
+export function useGetResumenInventarioQuery() {
+  const resumen = useQuery({
+    queryKey: ["resumen-inventario"],
+    queryFn: () => productoService.getResumenInventario(),
+    staleTime: 1000 * 60 * 5, // 5 min
+  });
+
+  return {
+    ...resumen,
+  };
+}

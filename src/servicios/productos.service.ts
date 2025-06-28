@@ -16,6 +16,10 @@ class ProductosService {
   eliminar(productos: number[]): Promise<RespuestaApi> {
     return axios.patch<RespuestaApi>("/inventario/productos", { productos }).then((res) => res.data);
   }
+
+  getResumenInventario(): Promise<{productos: number, marcas: number, proveedores: number, pedidosPendientes: number}> {
+    return axios.get("/inventario/").then((res) => res.data);
+  }
 }
 
 export const productoService =  new ProductosService();
