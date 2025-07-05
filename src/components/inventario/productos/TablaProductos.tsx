@@ -16,7 +16,9 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import Link from "next/link";
 import { FilterMatchMode } from "primereact/api";
 import { Menu } from "primereact/menu";
-import { useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Sidebar } from "primereact/sidebar";
+import { FormKardex } from "../kardex/FormKardex";
 
 export function TableProductos() {
   const { data: productos, isLoading } = useGetProductosQuery();
@@ -28,27 +30,30 @@ export function TableProductos() {
   const [productoSeleccionado, setProductoSeleccionado] = useState<Producto | null>(null);
   const opcionesProductoRef = useRef<Menu>(null);
   const toast = useRef<Toast>(null);
-  const router = useRouter()
+  const router = useRouter();
+  const params = useSearchParams()
+  const pathname = usePathname();
 
   const itemsOpcionesProducto = [
     {
       label: "Editar",
       icon: "pi pi-pencil",
       command: () => {
-        router.push(`/work/inventario/productos/edit?producto=${JSON.stringify(productoSeleccionado)}`)
+        router.push(`/work/inventario/productos/edit?producto=${JSON.stringify(productoSeleccionado)}`);
       },
     },
     {
       label: "Crear movimiento",
       icon: "pi pi-chevron-right",
       command: () => {
+        router.push(`/work/inventario/productos/lista?p=${productoSeleccionado?.id}`);
       },
     },
     {
       label: "Kardex",
       icon: "pi pi-chart-bar",
       command: () => {
-        if(productoSeleccionado) router.push(`/work/inventario/kardex?id=${productoSeleccionado.id}&n=${productoSeleccionado.descripcion}`);
+        if (productoSeleccionado) router.push(`/work/inventario/kardex?id=${productoSeleccionado.id}&n=${productoSeleccionado.descripcion}`);
       },
     },
   ];
@@ -86,8 +91,7 @@ export function TableProductos() {
   const HeaderTable = (
     <div className="flex justify-between items-center">
       <div>
-        <Button size="small" icon={isPending ? "pi pi-spin pi-spinner" : "pi pi-trash"} severity="danger"
-                label="Eliminar" disabled={seleccion.length === 0 || isPending} onClick={confirmarEliminacion} />
+        <Button size="small" icon={isPending ? "pi pi-spin pi-spinner" : "pi pi-trash"} severity="danger" label="Eliminar" disabled={seleccion.length === 0 || isPending} onClick={confirmarEliminacion} />
       </div>
       <div>
         <IconField>
@@ -117,7 +121,7 @@ export function TableProductos() {
   function Acciones(row: Producto) {
     return (
       <div className="flex gap-1">
-          <Button icon="pi pi-cog" size="small" text onClick={(e) => onSeleccionProducto(e, row)} />
+        <Button icon="pi pi-cog" size="small" text onClick={(e) => onSeleccionProducto(e, row)} />
       </div>
     );
   }
@@ -136,7 +140,6 @@ export function TableProductos() {
       tostada(data);
     }
   }, [isError, isSuccess]);
-
 
   return (
     <div>
@@ -173,6 +176,9 @@ export function TableProductos() {
         <Column field="stock" header="Existencia" />
         <Column field="marca" header="Marca" />
       </DataTable>
+      <Sidebar visible={!!params.get("p")} header="Crear movimiento" onHide={() => router.replace(`${pathname}`)} position="right" className="w-11/12 md:w-8/12 lg:w-6/12 xl:w-4/12">
+        <FormKardex />
+      </Sidebar>
     </div>
   );
 }
