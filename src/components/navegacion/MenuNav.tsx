@@ -28,6 +28,7 @@ export function MenuNav({ className, isStatic = false, children }: MenuNavProps)
     },
     { label: "inventario", icon: "pi pi-box", href: "/work/inventario" },
     { label: "Clientes", icon: "pi pi-users", href: "/work/clientes" },
+    { label: "Empleados", icon: "pi pi-users", href: "/work/empleados" },
     { label: "Reportes", icon: "pi pi-chart-bar", href: "/work/reportes" },
     { label: "Configuración", icon: "pi pi-cog", href: "/work/configuracion" },
   ];

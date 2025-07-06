@@ -3,8 +3,8 @@ import { addLocale, APIOptions, PrimeReactProvider } from "primereact/api";
 import { es } from "@/utils/esLocale";
 
 export default function PrimeProvider({
-                                        children,
-                                      }: {
+  children,
+}: {
   children: React.ReactNode;
 }) {
   addLocale("es", es);
