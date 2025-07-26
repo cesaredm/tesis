@@ -137,15 +137,23 @@ export function TablaFactura() {
     return (
       <div className="p-buttonset">
         <ButtonGroup>
-          <Button icon="pi pi-plus" size="small" onClick={(e) => {
-            opAdd.current?.toggle(e);
-            setDetalle(row);
-          }} />
+          <Button
+            icon="pi pi-plus"
+            size="small"
+            onClick={(e) => {
+              opAdd.current?.toggle(e);
+              setDetalle(row);
+            }}
+          />
           <Button icon="pi pi-minus" size="small" onClick={() => disminuiCantidadEnFactura(row)} />
-          <Button icon="pi pi-tag" size="small" onClick={(e) => {
-            opDescuento.current?.toggle(e);
-            setDetalle(row);
-          }} />
+          <Button
+            icon="pi pi-tag"
+            size="small"
+            onClick={(e) => {
+              opDescuento.current?.toggle(e);
+              setDetalle(row);
+            }}
+          />
         </ButtonGroup>
       </div>
     );
@@ -174,20 +182,28 @@ export function TablaFactura() {
   }
 
   const Header = (
-    <div className="flex items-center gap-1">
-      <form action="" onSubmit={onSubmitCodigoBarra}>
-        <IconField>
-          <InputIcon className="pi pi-barcode" />
-          <InputText name="codigoBarra" required />
-        </IconField>
-      </form>
+    <div className="flex flex-col gap-2">
+      <div className="">
+        <Dropdown
+          options={[]}
+          placeholder="Selecciona un cliente"
+         />
+      </div>
+      <div className="flex items-center gap-1">
+        <form action="" onSubmit={onSubmitCodigoBarra}>
+          <IconField>
+            <InputIcon className="pi pi-barcode" />
+            <InputText name="codigoBarra" required />
+          </IconField>
+        </form>
 
-      <ButtonGroup>
-        <Button label="Eliminar art." size="small" severity="warning" icon="pi pi-eraser" onClick={eliminarArticulos} />
-        <SidebarInventario />
-        <Button label="Cobrar" size="small" icon="pi pi-money-bill" disabled={detalles.size == 0} />
-        <Button label="Imprimir" size="small" icon="pi pi-print" disabled={detalles.size == 0} />
-      </ButtonGroup>
+        <ButtonGroup>
+          <Button label="Eliminar art." size="small" severity="warning" icon="pi pi-eraser" onClick={eliminarArticulos} />
+          <SidebarInventario />
+          <Button label="Cobrar" size="small" icon="pi pi-money-bill" disabled={detalles.size == 0} />
+          <Button label="Imprimir" size="small" icon="pi pi-print" disabled={detalles.size == 0} />
+        </ButtonGroup>
+      </div>
     </div>
   );
 
@@ -205,8 +221,7 @@ export function TablaFactura() {
           <div>
             <label htmlFor="">Cantidad</label>
             <div className="p-inputgroup">
-              <InputNumber mode="decimal" minFractionDigits={2} maxFractionDigits={2} locale="en-ni" name="cantidad"
-                           autoFocus required />
+              <InputNumber mode="decimal" minFractionDigits={2} maxFractionDigits={2} locale="en-ni" name="cantidad" autoFocus required />
               <Button icon="pi pi-check" />
             </div>
           </div>
@@ -217,16 +232,13 @@ export function TablaFactura() {
           <div>
             <label htmlFor="">Descuento</label>
             <div className="p-inputgroup">
-              <InputNumber mode="decimal" minFractionDigits={2} maxFractionDigits={2} locale="en-ni" name="descuento"
-                           autoFocus required />
+              <InputNumber mode="decimal" minFractionDigits={2} maxFractionDigits={2} locale="en-ni" name="descuento" autoFocus required />
               <Button icon="pi pi-check" />
             </div>
           </div>
         </form>
       </OverlayPanel>
-      <DataTable value={Array.from(detalles.values())} selectionMode={"multiple"} header={Header} footer={FooterTable}
-                 selection={seleccion} onSelectionChange={({ value }) => setSeleccion(value)}
-                 emptyMessage="Factura vacia." showGridlines>
+      <DataTable value={Array.from(detalles.values())} selectionMode={"multiple"} header={Header} footer={FooterTable} selection={seleccion} onSelectionChange={({ value }) => setSeleccion(value)} emptyMessage="Factura vacia." showGridlines>
         <Column body={AccionesTemplate} headerStyle={{ width: "12rem" }} />
         <Column body={DescripcionTable} header={"Descripción"} />
       </DataTable>
