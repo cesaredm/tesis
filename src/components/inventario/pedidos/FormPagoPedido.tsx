@@ -5,7 +5,7 @@ import { Calendar } from "primereact/calendar";
 import { InputNumber } from "primereact/inputnumber";
 import { Button } from "primereact/button";
 import { useGuardarPagoPedidoMutation, useGuardarPedidoMutation } from "@/hooks/pedidos";
-import { PagoPedidoSave } from "@/types";
+import { PagoPedidoSave } from "@/domain/entities/Pedidos";
 import { Toast } from "primereact/toast";
 import { toastError, toastSuccess } from "@/utils/formatToast";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useActualizarProveedorMutation, useGuardarProveedorMutation } from "@/hooks/proveedores";
-import { Proveedor, ProveedorSave, ProveedorUpdate } from "@/types";
+import { Proveedor, ProveedorSave, ProveedorUpdate } from "@/domain/entities/Proveedores";
 import { isAxiosError } from "@/utils/axiosConfig";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";

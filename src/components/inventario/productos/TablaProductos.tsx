@@ -1,7 +1,8 @@
 "use client";
 
 import { useEliminarProductoMutation, useGetProductosQuery } from "@/hooks/productos";
-import { Producto, RespuestaApi } from "@/types";
+import { Producto } from "@/domain/entities/Productos";
+import { RespuestaApi } from "@/types";
 import { formatDecimal } from "@/utils/helpers";
 import { Column } from "primereact/column";
 import { DataTable, DataTableFilterMeta } from "primereact/datatable";
@@ -13,10 +14,9 @@ import { useEffect, useRef, useState } from "react";
 import { isAxiosError } from "@/utils/axiosConfig";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
-import Link from "next/link";
 import { FilterMatchMode } from "primereact/api";
 import { Menu } from "primereact/menu";
-import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Sidebar } from "primereact/sidebar";
 import { FormKardex } from "../kardex/FormKardex";
 
@@ -31,7 +31,7 @@ export function TableProductos() {
   const opcionesProductoRef = useRef<Menu>(null);
   const toast = useRef<Toast>(null);
   const router = useRouter();
-  const params = useSearchParams()
+  const params = useSearchParams();
   const pathname = usePathname();
 
   const itemsOpcionesProducto = [

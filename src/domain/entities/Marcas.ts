@@ -10,3 +10,4 @@ export interface MarcaSave {
 export interface MarcaUpdate extends MarcaSave {
   id: number;
 }
+

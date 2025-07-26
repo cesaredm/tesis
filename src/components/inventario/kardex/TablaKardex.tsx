@@ -1,5 +1,5 @@
 "use client";
-import { Kardex } from "@/types/kardex";
+import { Kardex } from "@/domain/entities/Kardex";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 

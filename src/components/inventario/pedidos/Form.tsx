@@ -1,7 +1,6 @@
 "use client";
 
 import { Pedido } from "./Pedido";
-import { Productos } from "./Productos";
 
 export function FormPedidos() {
   return (

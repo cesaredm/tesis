@@ -1,14 +1,9 @@
 "use client";
-import {
-  DataTable,
-  DataTableExpandedRows,
-  DataTableFilterMeta,
-  DataTableValueArray,
-} from "primereact/datatable";
+import { DataTable, DataTableExpandedRows, DataTableFilterMeta, DataTableValueArray } from "primereact/datatable";
 import { useGetPedidosQuery } from "@/hooks/pedidos";
 import { Column } from "primereact/column";
 import { useState } from "react";
-import { DetallesPedido, Pedido } from "@/types";
+import { DetallesPedido, Pedido } from "@/domain/entities/Pedidos";
 import { formatDecimal } from "@/utils/helpers";
 import { Button } from "primereact/button";
 import { FilterMatchMode } from "primereact/api";
@@ -53,29 +48,25 @@ export function TablaPedidos() {
     );
   }
 
-  function EstadoTemplate(row: Pedido){
+  function EstadoTemplate(row: Pedido) {
     return (
       <div>
         <Tag severity={row.estado == "Pendiente" ? "warning" : "success"} value={row.estado} />
       </div>
-    )
+    );
   }
-   function SaldoTemplate(row: Pedido) {
-    console.log(row)
-    
-    function saldo():number{
+  function SaldoTemplate(row: Pedido) {
+    console.log(row);
+
+    function saldo(): number {
       if (!row.pagado) {
         return row.total;
       }
       return row.total - row.pagado;
     }
 
-    return (
-      <div>
-        {formatDecimal(saldo())}
-      </div>
-    );
-   }
+    return <div>{formatDecimal(saldo())}</div>;
+  }
 
   function onChangeGlobalFilter(e: React.ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;

@@ -1,7 +1,8 @@
 import { axios, isAxiosError } from "@/utils/axiosConfig";
 import { Producto, ProductoSave, ProductoUpdate, RespuestaApi } from "@/types";
+import { ProductoRepository } from "../../domain/repositories/Productos.repository";
 
-class ProductosService {
+export class ProductoRepositoryImpl implements ProductoRepository {
   async getProductos(): Promise<Producto[]> {
     const { data } = await axios.get("/inventario/productos");
     return data;
@@ -17,9 +18,7 @@ class ProductosService {
     return axios.patch<RespuestaApi>("/inventario/productos", { productos }).then((res) => res.data);
   }
 
-  getResumenInventario(): Promise<{productos: number, marcas: number, proveedores: number, pedidosPendientes: number}> {
+  getResumenInventario(): Promise<{ productos: number; marcas: number; proveedores: number; pedidosPendientes: number }> {
     return axios.get("/inventario/").then((res) => res.data);
   }
 }
-
-export const productoService =  new ProductosService();

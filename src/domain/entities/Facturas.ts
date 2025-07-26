@@ -1,4 +1,4 @@
-import { Producto } from "./producto";
+import { Producto } from "./Productos";
 
 export interface Factura {
   id: number;
@@ -12,10 +12,9 @@ export interface FacturaSave {
   credito: number | null;
 }
 
-export interface DetalleSave extends Producto{
+export interface DetalleSave extends Producto {
   cantidad: number;
   precio: number;
   importe: number;
   precioOriginal: number;
 }
-

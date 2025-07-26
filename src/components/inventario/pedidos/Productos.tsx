@@ -6,7 +6,7 @@ import { Spinner } from "@/components/Spinner";
 import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import { useRef, useState } from "react";
-import { DetalleSave, DetallesPedidoSave, Producto } from "@/types";
+import { Producto } from "@/domain/entities/Productos";
 import { formatDecimal } from "@/utils/helpers";
 import { FilterMatchMode } from "primereact/api";
 import { IconField } from "primereact/iconfield";

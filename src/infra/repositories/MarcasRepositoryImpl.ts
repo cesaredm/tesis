@@ -1,7 +1,8 @@
 import { axios, isAxiosError } from "@/utils/axiosConfig";
 import { Marca, MarcaSave, MarcaUpdate, RespuestaApi } from "@/types";
+import { MarcaRepository } from "@/domain/repositories/Marcas.repository";
 
-class MarcaService {
+export class MarcaRepositoryImpl implements MarcaRepository {
   async getMarcas(): Promise<Marca[]> {
     const { data } = await axios.get("/inventario/marcas");
     return data;
@@ -23,4 +24,4 @@ class MarcaService {
   }
 }
 
-export const marcaService = new MarcaService();
+

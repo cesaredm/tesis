@@ -52,3 +52,4 @@ export interface PagoPedido {
   fecha: string | Date;
   estado: string;
 }
+

@@ -11,7 +11,7 @@ import { useForm, Controller } from "react-hook-form";
 import { Toast } from "primereact/toast";
 import { isAxiosError } from "@/utils/axiosConfig";
 import { useRouter } from "next/navigation";
-import { Producto, ProductoSave, ProductoUpdate } from "@/types";
+import { Producto, ProductoSave, ProductoUpdate } from "@/domain/entities/Productos";
 
 function BoxForm({ children }: { children: React.ReactNode }) {
   return <div className="flex flex-col gap-1">{children}</div>;

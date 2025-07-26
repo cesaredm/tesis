@@ -1,8 +1,9 @@
 import { RespuestaApi } from "@/types";
-import { Proveedor, ProveedorUpdate, ProveedorSave } from "@/types/proveedor";
+import { ProveedresRepository } from "@/domain/repositories/Proveedores.repository";
+import { Proveedor, ProveedorUpdate, ProveedorSave } from "@/domain/entities/Proveedores";
 import { axios } from "@/utils/axiosConfig";
 
-class ProveedoresService {
+export class ProveedoresRepositoryImpl implements ProveedresRepository {
   async getProveedores(): Promise<Proveedor[]> {
     const { data } = await axios.get("/inventario/proveedores");
     return data;
@@ -24,4 +25,4 @@ class ProveedoresService {
   }
 }
 
-export const proveedoresService = new ProveedoresService();
+

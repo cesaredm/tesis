@@ -2,7 +2,7 @@
 import { DataTable } from "primereact/datatable";
 import { usePedidosStore } from "@/store/pedidos.store";
 import { Column } from "primereact/column";
-import { DetallesPedidoSave, PedidoSave } from "@/types";
+import { DetallesPedidoSave, PedidoSave } from "@/domain/entities/Pedidos";
 import { Productos } from "./Productos";
 import React, { useEffect, useRef, useState } from "react";
 import { formatDecimal } from "@/utils/helpers";

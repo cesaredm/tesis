@@ -1,6 +1,6 @@
 "use client";
 import { useCrearMovimientoKardexMutation } from "@/hooks/kardex";
-import { KardexSave } from "@/types/kardex";
+import { KardexSave } from "@/domain/entities/Kardex";
 import { toastError, toastSuccess } from "@/utils/formatToast";
 import { useSearchParams } from "next/navigation";
 import { Button } from "primereact/button";

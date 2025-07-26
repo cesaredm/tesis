@@ -1,7 +1,10 @@
 import { axios } from "@/utils/axiosConfig";
-import { PedidoSave, Pedido, RespuestaApi, DetallesPedidoSave, PedidoUpdate, PagoPedidoSave, PagoPedido } from "@/types";
+import { PedidosRepository } from "@/domain/repositories/Pedidos.repository";
+import { PedidoSave, Pedido, DetallesPedidoSave, PedidoUpdate, PagoPedidoSave, PagoPedido } from "@/domain/entities/Pedidos";
+import { RespuestaApi } from "@/types";
 import { format } from "@formkit/tempo";
-class PedidosService {
+
+export class PedidosRepositoryImpl implements PedidosRepository {
   async getPedidos(): Promise<Pedido[]> {
     const { data } = await axios.get("/inventario/pedidos");
     return data;
@@ -20,8 +23,8 @@ class PedidosService {
   async pagarPedido(pago: PagoPedidoSave): Promise<RespuestaApi> {
     const parsedData: PagoPedidoSave = {
       ...pago,
-      fecha: format({date: pago.fecha, format: "YYYY-MM-DD HH:mm:ss"}),
-    }
+      fecha: format({ date: pago.fecha, format: "YYYY-MM-DD HH:mm:ss" }),
+    };
     const { data } = await axios.post("/inventario/pedidos/pagos", parsedData);
     return data;
   }
@@ -31,5 +34,3 @@ class PedidosService {
     return data;
   }
 }
-
-export const pedidosService = new PedidosService();

@@ -1,7 +1,7 @@
 "use client";
 import { useActualizarMarcaMutation, useGuardarMarcaMutation } from "@/hooks/marcas";
 import { isAxiosError } from "@/utils/axiosConfig";
-import { MarcaSave, MarcaUpdate } from "@/types/marca";
+import { MarcaSave, MarcaUpdate } from "@/domain/entities/Marcas";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { Toast } from "primereact/toast";
