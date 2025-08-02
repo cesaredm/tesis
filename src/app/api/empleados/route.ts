@@ -4,31 +4,10 @@ import { respuesta, respuestaError } from "@/utils/respuestas";
 import { ResultSetHeader } from "mysql2";
 import { ZodError } from "zod";
 
-export async function POST(req: Request) {
-  const conn = await conexiondb.getConnection();
-  try {
-    const data = await req.json();
-    const clienteValido = PersonaSchema.parse(data);
-    await conn.beginTransaction();
-    const [result] = await conn.query<ResultSetHeader>("INSERT INTO persona SET ?", [clienteValido]);
-    const persona = result.insertId;
-    await conn.query("INSERT INTO clientes SET ?", [{ persona }]);
-    await conn.commit();
-    return Response.json(respuesta(), { status: 201 });
-  } catch (error) {
-    console.log(error);
-    await conn.rollback();
-    if (error instanceof ZodError) return Response.json(respuestaError({ error: error.issues.map((issue) => issue.message).join(", \n ") }), { status: 400 });
-    return Response.json(respuestaError());
-  } finally {
-    await conn.release();
-  }
-}
-
 export async function GET() {
   const conn = await conexiondb.getConnection();
   try {
-    const [clientes] = await conn.query("SELECT * FROM clientestienda");
+    const [clientes] = await conn.query("SELECT * FROM empleados");
     return Response.json(clientes);
   } catch (error) {
     console.log(error);
@@ -38,12 +17,31 @@ export async function GET() {
   }
 }
 
-export async function PATCH(req: Request) {
+export async function POST(req: Request) {
   const conn = await conexiondb.getConnection();
   try {
     const data = await req.json();
+    const clienteValido = PersonaSchema.parse(data);
+    await conn.beginTransaction();
+    const [result] = await conn.query<ResultSetHeader>("INSERT INTO persona SET ?", [clienteValido]);
+    const persona = result.insertId;
+    await conn.query("INSERT INTO empleado SET ?", [{ persona }]);
+    await conn.commit();
+    return Response.json(respuesta(), { status: 201 });
+  } catch (error) {
+    console.log(error);
+    await conn.rollback();
+    if (error instanceof ZodError) return Response.json(respuestaError({ error: error.issues.map((issue) => issue.message).join(", \n ") }), { status: 400 });
+    return Response.json(respuestaError(), { status: 400 });
+  } finally {
+    await conn.release();
+  }
+}
+export async function PATCH(req: Request) {
+  try {
+    const data = await req.json();
     const clienteValido = PersonaSchemaUpdate.parse(data);
-    const [result] = await conn.query<ResultSetHeader>("UPDATE persona SET nombres = ?, apellidos = ?, dni = ?, direccion = ?, departamento = ?, municipio = ?, barrio = ?, lugarTrabajo = ?, telefono = ?, foto = ? WHERE id = ?", [
+    await conexiondb.query<ResultSetHeader>("UPDATE persona SET nombres = ?, apellidos = ?, dni = ?, direccion = ?, departamento = ?, municipio = ?, barrio = ?, lugarTrabajo = ?, telefono = ?, foto = ? WHERE id = ?", [
       clienteValido.nombres,
       clienteValido.apellidos,
       clienteValido.dni,
@@ -54,14 +52,12 @@ export async function PATCH(req: Request) {
       clienteValido.lugarTrabajo,
       clienteValido.telefono,
       clienteValido.foto,
-      data.id,
+      clienteValido.id,
     ]);
-    return Response.json(respuesta(), { status: 200 });
+    return Response.json(respuesta(), { status: 201 });
   } catch (error) {
     console.log(error);
     if (error instanceof ZodError) return Response.json(respuestaError({ error: error.issues.map((issue) => issue.message).join(", \n ") }), { status: 400 });
-    return Response.json(respuestaError());
-  } finally {
-    await conn.release();
+    return Response.json(respuestaError(), { status: 400 });
   }
 }

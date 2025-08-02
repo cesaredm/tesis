@@ -1,0 +1,18 @@
+import { Cliente, ClienteSave } from "../entities/Clientes";
+import { ClientesRepository } from "../repositories/Clientes.repository";
+
+export class ClientesUseCases {
+  constructor(private clientesRepository: ClientesRepository) {}
+
+  async getClientes(): Promise<Cliente[]> {
+    return await this.clientesRepository.getClientes();
+  }
+
+  async guardarCliente(cliente: ClienteSave) {
+    return await this.clientesRepository.guardarCliente(cliente);
+  }
+
+  async actualizarCliente(cliente: Cliente) {
+    return await this.clientesRepository.actualizarCliente(cliente);
+  }
+}

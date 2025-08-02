@@ -1,7 +1,8 @@
 "use client";
 import { useGetProductosQuery } from "@/hooks/productos";
 import { useFacturaStore } from "@/store/factura.store";
-import { DetalleSave, Factura, Producto } from "@/types";
+import { DetalleSave, Factura } from "@/domain/entities/Facturas";
+import { Producto } from "@/domain/entities/Productos";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { IconField } from "primereact/iconfield";
@@ -17,10 +18,12 @@ import { formatDecimal } from "@/utils/helpers";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
+import { useGetClientesQuery } from "@/hooks/clientes";
 
 export function TablaFactura() {
   const { detalles, setReloadView, reloadView } = useFacturaStore((state) => state);
   const { data: inventario } = useGetProductosQuery();
+  const { data: clientes, isLoading: isLoadingClientes } = useGetClientesQuery()
   const [seleccion, setSeleccion] = useState<DetalleSave[]>([]);
   const toast = useRef<Toast>(null);
   const opAdd = useRef<OverlayPanel>(null);
@@ -183,12 +186,11 @@ export function TablaFactura() {
 
   const Header = (
     <div className="flex flex-col gap-2">
-      <div className="">
-        <Dropdown
-          options={[]}
-          placeholder="Selecciona un cliente"
-         />
+      <div className="flex flex-col gap-1 w-full lg:w-1/4">
+        <label htmlFor="">Cliente</label>
+        <Dropdown options={clientes} optionLabel="nombre" optionValue="idCliente" placeholder="Selecciona un cliente" filter />
       </div>
+
       <div className="flex items-center gap-1">
         <form action="" onSubmit={onSubmitCodigoBarra}>
           <IconField>

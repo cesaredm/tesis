@@ -1,7 +1,8 @@
 "use client";
 import { useGetProductosQuery } from "@/hooks/productos";
 import { useFacturaStore } from "@/store/factura.store";
-import { Producto, DetalleSave } from "@/types";
+import { Producto } from "@/domain/entities/Productos";
+import { DetalleSave } from "@/domain/entities/Facturas";
 import { FilterMatchMode } from "primereact/api";
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
@@ -29,7 +30,7 @@ export function Inventario() {
 
     const detalleExistente = detalles.get(producto.id);
     if (detalleExistente) {
-      if (detalleExistente.stock < (cantidad + detalleExistente.cantidad)) {
+      if (detalleExistente.stock < cantidad + detalleExistente.cantidad) {
         toast.current?.show({ severity: "error", summary: "Error", detail: "Producto no cuenta con suficiente stock para la venta.", life: 3000 });
         return;
       }
