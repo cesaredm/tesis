@@ -9,7 +9,8 @@ export interface Factura {
 
 export interface FacturaSave {
   fecha: string | Date;
-  credito: number | null;
+  cliente: number | null;
+  aval: number | null;
 }
 
 export interface DetalleSave extends Producto {

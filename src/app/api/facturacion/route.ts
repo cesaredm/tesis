@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { conexiondb } from "@/db/dbconfig";
+import { CreditoSchema } from "@/schemas/credito.schema";
 import { DetalleFacturaSchema, FacturaSchema } from "@/schemas/facturacion.schema";
 import { KardexSchema } from "@/schemas/productos.schema";
 import { respuesta } from "@/utils/respuestas";
@@ -15,9 +16,23 @@ export async function POST(request: Request) {
     const body = await request.json();
     const listaDetalles = body.detalles;
     const { detalles, ...factura } = body.factura;
-    const facturaValidada = FacturaSchema.parse(factura);
     await conn.beginTransaction();
+
+    if (factura.cliente && factura.cliente !== null) {
+      const creditoValido = CreditoSchema.parse({
+        cliente: factura.cliente,
+        aval: factura.aval,
+        fecha: format({ date: new Date(), format: "YYYY-MM-DD HH:mm:ss", tz: "America/Tegucigalpa" }),
+      });
+
+      const [resultCredito] = await conn.query<ResultSetHeader>("INSERT INTO creditos SET ?", [creditoValido]);
+      factura.credito = resultCredito.insertId;
+    }
+
+    const facturaValidada = FacturaSchema.parse(factura);
+
     const [resFactura] = await conn.query<ResultSetHeader>("INSERT INTO facturas SET ?", [{ ...facturaValidada, empleado }]);
+
     for (const detalle of listaDetalles) {
       const detalleValidado = DetalleFacturaSchema.parse({ ...detalle, factura: resFactura.insertId });
       await conn.query("INSERT INTO detalles SET ?", [detalleValidado]);
@@ -32,6 +47,7 @@ export async function POST(request: Request) {
       });
       await conn.query("INSERT INTO kardex SET ?", [kardexValidaddo]);
     }
+
     await conn.commit();
     return Response.json(respuesta(), { status: 201 });
   } catch (error) {
