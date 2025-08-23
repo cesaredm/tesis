@@ -1,4 +1,4 @@
-import { Tools } from "@/components/inventario/Tools";
+import { Tools } from "@/components/shared/Tools";
 
 const options = [
   {

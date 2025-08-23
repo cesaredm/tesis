@@ -5,3 +5,9 @@ export interface Pago {
   credito: number;
   clienteFullName: string;
 }
+
+export interface PagoSave{
+  fecha: string | Date;
+  monto: number;
+  credito: number;
+}

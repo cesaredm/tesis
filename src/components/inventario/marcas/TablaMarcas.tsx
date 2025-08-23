@@ -8,7 +8,7 @@ import { InputText } from "primereact/inputtext";
 import { Column } from "primereact/column";
 import { useEliminarMarcasMutation, useGetMarcasQuery } from "@/hooks/marcas";
 import { Marca } from "@/domain/entities/Marcas";
-import { Spinner } from "@/components/Spinner";
+import { Spinner } from "@/components/shared/Spinner";
 import { Toast } from "primereact/toast";
 import { isAxiosError } from "@/utils/axiosConfig";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";

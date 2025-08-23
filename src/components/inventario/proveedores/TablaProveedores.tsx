@@ -2,7 +2,7 @@
 import { DataTable, DataTableFilterMeta } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { useEliminarProveedorMutation, useGetProveedoresQuery } from "@/hooks/proveedores";
-import { Spinner } from "@/components/Spinner";
+import { Spinner } from "@/components/shared/Spinner";
 import { Proveedor } from "@/domain/entities/Proveedores";
 import { Fragment, useEffect } from "react";
 import { Button } from "primereact/button";

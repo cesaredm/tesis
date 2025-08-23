@@ -10,7 +10,7 @@ import { FilterMatchMode } from "primereact/api";
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
-import { Spinner } from "@/components/Spinner";
+import { Spinner } from "@/components/shared/Spinner";
 import Link from "next/link";
 import { Tag } from "primereact/tag";
 

@@ -5,3 +5,7 @@ export const PagoSchema = z.object({
   monto: z.number({ required_error: "El monto es requerido", invalid_type_error: "El monto debe ser un número" }).positive("El monto debe ser un número positivo"),
   credito: z.number({ required_error: "El crédito es requerido", invalid_type_error: "El crédito debe ser un número" }).positive("El crédito debe ser un número positivo"),
 });
+
+export const PagoUpdateSchema = PagoSchema.extend({
+  id: z.number({ required_error: "El id es requerido", invalid_type_error: "El id debe ser un número" }).positive("El id debe ser un número positivo"),
+});

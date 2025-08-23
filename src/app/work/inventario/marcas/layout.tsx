@@ -1,4 +1,4 @@
-import { Tools } from "@/components/inventario/Tools";
+import { Tools } from "@/components/shared/Tools";
 
 const items = [
   { title: "Crear", icon: "pi pi-plus", url: "/work/inventario/marcas" },

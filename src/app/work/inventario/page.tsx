@@ -1,7 +1,7 @@
 "use client";
 import { useGetResumenInventarioQuery } from "@/hooks/productos";
 import { formatDecimal } from "@/utils/helpers";
-import { Spinner2 } from "@/components/Spinner2";
+import { Spinner2 } from "@/components/shared/Spinner2";
 
 export default function Inventario() {
   const { data, isLoading, isError } = useGetResumenInventarioQuery();

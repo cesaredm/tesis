@@ -2,7 +2,7 @@
 import { DataTable, DataTableFilterMeta } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { useGetProductosQuery } from "@/hooks/productos";
-import { Spinner } from "@/components/Spinner";
+import { Spinner } from "@/components/shared/Spinner";
 import { Sidebar } from "primereact/sidebar";
 import { Button } from "primereact/button";
 import { useRef, useState } from "react";

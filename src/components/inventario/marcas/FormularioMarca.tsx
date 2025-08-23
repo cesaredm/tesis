@@ -8,6 +8,7 @@ import { Toast } from "primereact/toast";
 import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { HeaderForm } from "@/components/shared/HeaderForm";
 
 export function FormularioMarca({ marca }: { marca?: MarcaUpdate }) {
   // hooks => use
@@ -91,8 +92,7 @@ export function FormularioMarca({ marca }: { marca?: MarcaUpdate }) {
     <div>
       <Toast ref={toast} position="top-center" />
       <div>
-        <h1 className="text-2xl font-bold">Crear Marca</h1>
-        <p className="text-sm text-gray-500">Formulario para crear una nueva Marca.</p>
+       <HeaderForm title="Formulario de marcas" description="Aqui podras crear y actualizar marcas" />
         <form action="" onSubmit={handleSubmit(hanlderSubmit)}>
           <div className="flex flex-col gap-1">
             <div className="flex flex-col">
