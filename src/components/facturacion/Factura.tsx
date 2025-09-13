@@ -19,11 +19,12 @@ import { OverlayPanel } from "primereact/overlaypanel";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { useGetClientesQuery } from "@/hooks/clientes";
+import { facturasServices } from "@/servicios/facturas.services";
 
 export function TablaFactura() {
   const { detalles, setReloadView, reloadView } = useFacturaStore((state) => state);
   const { data: inventario } = useGetProductosQuery();
-  const { data: clientes, isLoading: isLoadingClientes } = useGetClientesQuery()
+  const { data: clientes, isLoading: isLoadingClientes } = useGetClientesQuery();
   const [seleccion, setSeleccion] = useState<DetalleSave[]>([]);
   const toast = useRef<Toast>(null);
   const opAdd = useRef<OverlayPanel>(null);
@@ -31,37 +32,12 @@ export function TablaFactura() {
   const [detalle, setDetalle] = useState<DetalleSave>();
 
   function agregarProducto(producto: Producto, cantidad: number) {
-    /*const filter = inventario?.find((item) => item.id === producto.id);
-    if (!filter) return;*/
-
-    const detalleExistente = detalles.get(producto.id);
-    if (detalleExistente) {
-      if (detalleExistente.stock < cantidad + detalleExistente.cantidad) {
-        toast.current?.show({
-          severity: "error",
-          summary: "Error",
-          detail: "Producto no cuenta con suficiente stock para la venta.",
-          life: 3000,
-        });
-        return;
-      }
-      const cantidadTotal = detalleExistente.cantidad + cantidad;
-      detalleExistente.cantidad = cantidadTotal;
-      detalleExistente.importe = cantidadTotal * detalleExistente.precio;
-      detalles.set(producto.id, detalleExistente);
-      setReloadView(reloadView + 1);
-    } else {
-      const detalle: DetalleSave = {
-        ...producto,
-        precio: producto.precioVenta,
-        cantidad: cantidad,
-        importe: cantidad * producto.precioVenta,
-        precioOriginal: producto.precioVenta,
-      };
-
-      detalles.set(producto.id, detalle);
-      setReloadView(reloadView + 1);
+    const respuesta = facturasServices.agregarDetale(producto, cantidad, detalles);
+    if (respuesta.severity === "error") {
+      toast.current?.show(respuesta);
+      return;
     }
+    setReloadView(reloadView + 1);
   }
 
   function onSubmitCodigoBarra(e: React.FormEvent<HTMLFormElement>) {

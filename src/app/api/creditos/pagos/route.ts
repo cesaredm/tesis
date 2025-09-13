@@ -1,6 +1,6 @@
 import { conexiondb } from "@/db/dbconfig";
 import { PagoSchema, PagoUpdateSchema } from "@/schemas/pago.schema";
-import { respuestaError } from "@/utils/respuestas";
+import { respuesta, respuestaError } from "@/utils/respuestas";
 import { ResultSetHeader } from "mysql2";
 import { ZodError } from "zod";
 
@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     const [result] = await conexiondb.query<ResultSetHeader>("INSERT INTO pagos SET = ?", [pagoValido]);
 
     if (result.affectedRows > 0) {
-      return Response.json({ mensaje: "Pago registrado" }, { status: 201 });
+      return Response.json(respuesta(), { status: 201 });
     }
 
     return Response.json(respuestaError(), { status: 400 });
