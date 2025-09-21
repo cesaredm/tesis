@@ -1,4 +1,4 @@
-import { FacturaSave, DetalleSave } from "@/types";
+import { FacturaSave, DetalleSave } from "@/domain/entities/Facturas";
 import { create } from "zustand";
 
 interface FacturaStore {
@@ -17,7 +17,8 @@ interface FacturaStore {
 
 const initialFactura: FacturaSave = {
   fecha: new Date(),
-  credito: null,
+  aval: null,
+  cliente: null
 };
 
 export const useFacturaStore = create<FacturaStore>((set) => ({

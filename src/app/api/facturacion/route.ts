@@ -3,7 +3,7 @@ import { conexiondb } from "@/db/dbconfig";
 import { CreditoSchema } from "@/schemas/credito.schema";
 import { DetalleFacturaSchema, FacturaSchema } from "@/schemas/facturacion.schema";
 import { KardexSchema } from "@/schemas/productos.schema";
-import { respuesta } from "@/utils/respuestas";
+import { respuesta, respuestaError } from "@/utils/respuestas";
 import { format } from "@formkit/tempo";
 import { ResultSetHeader } from "mysql2";
 import { ZodError } from "zod";
@@ -29,9 +29,10 @@ export async function POST(request: Request) {
       factura.credito = resultCredito.insertId;
     }
 
-    const facturaValidada = FacturaSchema.parse(factura);
+    const facturaValidada = FacturaSchema.parse({...factura, empleado, fecha: format({ date: new Date(), format: "YYYY-MM-DD HH:mm:ss", tz: "America/Tegucigalpa" }),
+    });
 
-    const [resFactura] = await conn.query<ResultSetHeader>("INSERT INTO facturas SET ?", [{ ...facturaValidada, empleado }]);
+    const [resFactura] = await conn.query<ResultSetHeader>("INSERT INTO facturas SET ?", [{ ...facturaValidada }]);
 
     for (const detalle of listaDetalles) {
       const detalleValidado = DetalleFacturaSchema.parse({ ...detalle, factura: resFactura.insertId });
@@ -54,8 +55,8 @@ export async function POST(request: Request) {
     await conn.rollback();
     console.log(error);
     if (error instanceof ZodError) {
-      return Response.json(respuesta({ error: error.errors.map((e) => e.message).join(", ") }), { status: 400 });
+      return Response.json(respuestaError({ error: error.errors.map((e) => e.message).join(", ") }), { status: 400 });
     }
-    return Response.json(respuesta({ error: "Error al crear la factura" }), { status: 400 });
+    return Response.json(respuestaError({ error: "Error al crear la factura" }), { status: 400 });
   }
 }

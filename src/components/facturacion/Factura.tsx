@@ -12,7 +12,7 @@ import { ButtonGroup } from "primereact/buttongroup";
 import { Button } from "primereact/button";
 import { SidebarInventario } from "./SidebarInventario";
 import { Totales } from "./Totales";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Toast } from "primereact/toast";
 import { formatDecimal } from "@/utils/helpers";
 import { OverlayPanel } from "primereact/overlaypanel";
@@ -20,16 +20,20 @@ import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { useGetClientesQuery } from "@/hooks/clientes";
 import { facturasServices } from "@/servicios/facturas.services";
+import { useGuardarFactura } from "@/hooks/useFacturacion";
+import { toastError, toastSuccess } from "@/utils/formatToast";
 
 export function TablaFactura() {
-  const { detalles, setReloadView, reloadView } = useFacturaStore((state) => state);
+  const { detalles, setReloadView, reloadView, factura } = useFacturaStore((state) => state);
   const { data: inventario } = useGetProductosQuery();
   const { data: clientes, isLoading: isLoadingClientes } = useGetClientesQuery();
   const [seleccion, setSeleccion] = useState<DetalleSave[]>([]);
+  const [print, setPrint] = useState(false);
   const toast = useRef<Toast>(null);
   const opAdd = useRef<OverlayPanel>(null);
   const opDescuento = useRef<OverlayPanel>(null);
   const [detalle, setDetalle] = useState<DetalleSave>();
+  const { mutate: guardarFactura, isPending, isSuccess, isError, error, data } = useGuardarFactura()
 
   function agregarProducto(producto: Producto, cantidad: number) {
     const respuesta = facturasServices.agregarDetale(producto, cantidad, detalles);
@@ -112,6 +116,17 @@ export function TablaFactura() {
     setReloadView(reloadView + 1);
   }
 
+  function guardar(print: boolean) {
+    if (!isPending) {
+      guardarFactura({
+        factura,
+        detalles: Array.from(detalles.values())
+      })
+      setPrint(print);
+    }
+
+  }
+
   function AccionesTemplate(row: DetalleSave) {
     return (
       <div className="p-buttonset">
@@ -178,8 +193,8 @@ export function TablaFactura() {
         <ButtonGroup>
           <Button label="Eliminar art." size="small" severity="warning" icon="pi pi-eraser" onClick={eliminarArticulos} />
           <SidebarInventario />
-          <Button label="Cobrar" size="small" icon="pi pi-money-bill" disabled={detalles.size == 0} />
-          <Button label="Imprimir" size="small" icon="pi pi-print" disabled={detalles.size == 0} />
+          <Button label="Cobrar" size="small" icon="pi pi-money-bill" disabled={detalles.size == 0} onClick={() => guardar(false)} loading={isPending} />
+          <Button label="Imprimir" size="small" icon="pi pi-print" disabled={detalles.size == 0} onClick={() => guardar(true)} loading={isPending} />
         </ButtonGroup>
       </div>
     </div>
@@ -190,6 +205,16 @@ export function TablaFactura() {
       <Totales />
     </div>
   );
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.current?.show(toastSuccess(data))
+    }
+
+    if (isError) {
+      toast.current?.show(toastError(error))
+    }
+  }, [isSuccess, isError])
 
   return (
     <div>

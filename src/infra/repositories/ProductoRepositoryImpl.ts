@@ -1,5 +1,6 @@
 import { axios, isAxiosError } from "@/utils/axiosConfig";
-import { Producto, ProductoSave, ProductoUpdate, RespuestaApi } from "@/types";
+import { Producto, ProductoSave, ProductoUpdate} from "@/domain/entities/Productos";
+import { RespuestaApi } from "@/types";
 import { ProductoRepository } from "../../domain/repositories/Productos.repository";
 
 export class ProductoRepositoryImpl implements ProductoRepository {
@@ -8,17 +9,17 @@ export class ProductoRepositoryImpl implements ProductoRepository {
     return data;
   }
 
-  crear(productos: ProductoSave): Promise<RespuestaApi> {
+  async crear(productos: ProductoSave): Promise<RespuestaApi> {
     return axios.post<RespuestaApi>("/inventario/productos", productos).then((res) => res.data);
   }
-  actualizar(producto: ProductoUpdate): Promise<RespuestaApi> {
+  async actualizar(producto: ProductoUpdate): Promise<RespuestaApi> {
     return axios.put<RespuestaApi>("/inventario/productos", producto).then((res) => res.data);
   }
-  eliminar(productos: number[]): Promise<RespuestaApi> {
+  async eliminar(productos: number[]): Promise<RespuestaApi> {
     return axios.patch<RespuestaApi>("/inventario/productos", { productos }).then((res) => res.data);
   }
 
-  getResumenInventario(): Promise<{ productos: number; marcas: number; proveedores: number; pedidosPendientes: number }> {
+  async getResumenInventario(): Promise<{ productos: number; marcas: number; proveedores: number; pedidosPendientes: number }> {
     return axios.get("/inventario/").then((res) => res.data);
   }
 }
