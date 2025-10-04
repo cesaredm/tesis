@@ -18,22 +18,25 @@ import { formatDecimal } from "@/utils/helpers";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
-import { useGetClientesQuery } from "@/hooks/clientes";
+import { useGetAvalesQuery, useGetClientesQuery } from "@/hooks/clientes";
 import { facturasServices } from "@/servicios/facturas.services";
 import { useGuardarFactura } from "@/hooks/useFacturacion";
 import { toastError, toastSuccess } from "@/utils/formatToast";
+import { Panel } from "primereact/panel";
+import { Card } from "primereact/card";
 
 export function TablaFactura() {
-  const { detalles, setReloadView, reloadView, factura } = useFacturaStore((state) => state);
+  const { detalles, setReloadView, reloadView, factura, setCampoFactura, limpiarTodo } = useFacturaStore((state) => state);
   const { data: inventario } = useGetProductosQuery();
   const { data: clientes, isLoading: isLoadingClientes } = useGetClientesQuery();
+  const { data: avales, isLoading: isLoadingAvales } = useGetAvalesQuery();
   const [seleccion, setSeleccion] = useState<DetalleSave[]>([]);
   const [print, setPrint] = useState(false);
   const toast = useRef<Toast>(null);
   const opAdd = useRef<OverlayPanel>(null);
   const opDescuento = useRef<OverlayPanel>(null);
   const [detalle, setDetalle] = useState<DetalleSave>();
-  const { mutate: guardarFactura, isPending, isSuccess, isError, error, data } = useGuardarFactura()
+  const { mutate: guardarFactura, isPending, isSuccess, isError, error, data } = useGuardarFactura();
 
   function agregarProducto(producto: Producto, cantidad: number) {
     const respuesta = facturasServices.agregarDetale(producto, cantidad, detalles);
@@ -118,13 +121,13 @@ export function TablaFactura() {
 
   function guardar(print: boolean) {
     if (!isPending) {
+      console.log({ factura, detalles: Array.from(detalles.values()) });
       guardarFactura({
         factura,
-        detalles: Array.from(detalles.values())
-      })
+        detalles: Array.from(detalles.values()),
+      });
       setPrint(print);
     }
-
   }
 
   function AccionesTemplate(row: DetalleSave) {
@@ -177,11 +180,6 @@ export function TablaFactura() {
 
   const Header = (
     <div className="flex flex-col gap-2">
-      <div className="flex flex-col gap-1 w-full lg:w-1/4">
-        <label htmlFor="">Cliente</label>
-        <Dropdown options={clientes} optionLabel="nombre" optionValue="idCliente" placeholder="Selecciona un cliente" filter />
-      </div>
-
       <div className="flex items-center gap-1">
         <form action="" onSubmit={onSubmitCodigoBarra}>
           <IconField>
@@ -200,6 +198,50 @@ export function TablaFactura() {
     </div>
   );
 
+  function DatosCredito() {
+    return (
+      <section className="flex flex-wrap gap-2">
+        <div className="flex flex-col gap-1 w-full lg:w-1/4">
+          <label htmlFor="">Cliente</label>
+          <Dropdown
+            onChange={(e) => setCampoFactura("cliente", e.value)}
+            options={clientes}
+            value={factura.cliente}
+            optionLabel="nombreCompleto"
+            optionValue="idCliente"
+            placeholder="Selecciona un cliente"
+            filter
+            emptyMessage={isLoadingClientes ? "Cargando..." : "No se encontraron clientes."}
+          />
+        </div>
+        <div className="flex flex-col gap-1 w-full lg:w-1/4">
+          <label htmlFor="">Aval</label>
+          <Dropdown
+            onChange={(e) => setCampoFactura("aval", e.value)}
+            options={avales}
+            value={factura.aval}
+            optionLabel="nombreCompleto"
+            optionValue="id"
+            placeholder="Selecciona un cliente"
+            filter
+            emptyMessage={isLoadingAvales ? "Cargando..." : "No se encontraron avales."}
+          />
+        </div>
+        <div className="flex items-end">
+          <Button
+            icon="pi pi-times"
+            label="Quitar"
+            onClick={() => {
+              setCampoFactura("cliente", null);
+              setCampoFactura("aval", null);
+            }}
+            disabled={!factura.cliente || !factura.aval}
+          />
+        </div>
+      </section>
+    );
+  }
+
   const FooterTable = (
     <div>
       <Totales />
@@ -208,13 +250,19 @@ export function TablaFactura() {
 
   useEffect(() => {
     if (isSuccess) {
-      toast.current?.show(toastSuccess(data))
+      toast.current?.show(toastSuccess(data));
+      limpiarTodo();
+      if (print) {
+        setTimeout(() => {
+          window.print();
+        }, 1000);
+      }
     }
 
     if (isError) {
-      toast.current?.show(toastError(error))
+      toast.current?.show(toastError(error));
     }
-  }, [isSuccess, isError])
+  }, [isSuccess, isError]);
 
   return (
     <div>
@@ -241,10 +289,15 @@ export function TablaFactura() {
           </div>
         </form>
       </OverlayPanel>
-      <DataTable value={Array.from(detalles.values())} selectionMode={"multiple"} header={Header} footer={FooterTable} selection={seleccion} onSelectionChange={({ value }) => setSeleccion(value)} emptyMessage="Factura vacia." showGridlines>
-        <Column body={AccionesTemplate} headerStyle={{ width: "12rem" }} />
-        <Column body={DescripcionTable} header={"Descripción"} />
-      </DataTable>
+      <Card>
+        <Panel header="Datos de crédito" className="mb-2">
+          <DatosCredito />
+        </Panel>
+        <DataTable value={Array.from(detalles.values())} selectionMode={"multiple"} header={Header} footer={FooterTable} selection={seleccion} onSelectionChange={({ value }) => setSeleccion(value)} emptyMessage="Factura vacia." showGridlines>
+          <Column body={AccionesTemplate} headerStyle={{ width: "12rem" }} />
+          <Column body={DescripcionTable} header={"Descripción"} />
+        </DataTable>
+      </Card>
     </div>
   );
 }

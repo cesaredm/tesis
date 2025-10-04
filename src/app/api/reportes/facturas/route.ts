@@ -1,0 +1,22 @@
+import { conexiondb } from "@/db/dbconfig";
+import { respuestaError } from "@/utils/respuestas";
+import { RowDataPacket } from "mysql2";
+
+export async function GET(request: Request, { params }: { params: { fecha: string } }) {
+  const conn = await conexiondb.getConnection();
+  try {
+    const fecha = params.fecha;
+    const [facturas] = await conn.query<RowDataPacket[]>("SELECT * FROM facturastienda where date(fecha) = ?", [fecha]);
+
+    for (const factura of facturas) {
+      const [detalles] = await conn.query<RowDataPacket[]>("SELECT d.id, d.cantidad, d.precio, d.importe, d.precioVenta,p.descripcion, p.modelo, p.marca FROM detalles d join inventariotienda p on d.producto = p.id where d.factura = ?", [factura.id]);
+      factura.detalles = detalles;
+    }
+
+    return Response.json(facturas, { status: 200, statusText: "ok" });
+  } catch (error) {
+    return Response.json(respuestaError(), { status: 500 });
+  } finally {
+    conn.release();
+  }
+}

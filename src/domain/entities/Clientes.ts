@@ -25,3 +25,10 @@ export interface ClienteSave {
   telefono: string;
   foto?: string;
 }
+
+export interface Aval {
+  id: number;
+  cliente: number;
+  nombres: string;
+  apellidos: string;
+}

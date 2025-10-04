@@ -6,6 +6,10 @@ import { useForm } from "react-hook-form";
 import { ClienteSave } from "@/domain/entities/Clientes";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Button } from "primereact/button";
+import { useGuardarClienteMutation } from "@/hooks/clientes";
+import { useEffect, useRef } from "react";
+import { toastError, toastSuccess } from "@/utils/formatToast";
+import { Toast } from "primereact/toast";
 
 export function CrearCliente() {
   const {
@@ -14,14 +18,28 @@ export function CrearCliente() {
     handleSubmit,
     reset,
   } = useForm<ClienteSave>();
+  const { mutate: guardar, isPending: isPendingGuardar, isSuccess: isSuccessGuardar, isError: isErrorGuardar, error: errorGuardar, data: dataGuardar } = useGuardarClienteMutation();
 
-    const onSubmit = (data: ClienteSave) => {
-        console.log(data);
-        reset();
-    };
+  const toast = useRef<Toast>(null);
+
+  const onSubmit = (data: ClienteSave) => {
+    guardar(data);
+  };
+
+  useEffect(() => {
+    if (isSuccessGuardar) {
+      toast.current?.show(toastSuccess(dataGuardar));
+      reset();
+    }
+
+    if (isErrorGuardar) {
+      toast.current?.show(toastError(errorGuardar));
+    }
+  }, [isSuccessGuardar, isErrorGuardar]);
 
   return (
     <section className="w-full lg:w-4/5 mx-auto">
+      <Toast ref={toast} />
       <HeaderForm title="Crear Cliente" description="Agrega un nuevo cliente" />
       <form action="" onSubmit={handleSubmit(onSubmit)}>
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-1">
@@ -72,8 +90,8 @@ export function CrearCliente() {
           </BoxForm>
         </section>
         <footer className="mt-2 flex justify-end gap-2">
-            <Button label="Cancelar" size="small" icon="pi pi-times" text type="button" onClick={() => reset()} />
-            <Button label="Guardar" size="small" icon="pi pi-check" type="submit" />
+          <Button label="Cancelar" size="small" icon="pi pi-times" text type="button" onClick={() => reset()} />
+          <Button label="Guardar" size="small" icon="pi pi-check" type="submit" />
         </footer>
       </form>
     </section>

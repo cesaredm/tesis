@@ -1,7 +1,7 @@
 import { conexiondb } from "@/db/dbconfig";
 import { Suspense } from "react";
 import { TablaKardex } from "@/components/inventario/kardex/TablaKardex";
-import { Kardex } from "@/types/kardex";
+import { Kardex } from "@/domain/entities/Kardex";
 import { Spinner2 } from "@/components/shared/Spinner2";
 
 async function getKardex(id: string) {

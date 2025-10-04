@@ -1,4 +1,4 @@
-import { Cliente, ClienteSave } from "../entities/Clientes";
+import { Aval, Cliente, ClienteSave } from "../entities/Clientes";
 import { ClientesRepository } from "../repositories/Clientes.repository";
 
 export class ClientesUseCases {
@@ -6,6 +6,10 @@ export class ClientesUseCases {
 
   async getClientes(): Promise<Cliente[]> {
     return await this.clientesRepository.getClientes();
+  }
+
+  getAvales(): Promise<Aval[]> {
+    return this.clientesRepository.getAvales();
   }
 
   async guardarCliente(cliente: ClienteSave) {

@@ -31,6 +31,15 @@ export function useActualizarClienteMutation() {
 export function useGetClientesQuery() {
   return useQuery({
     queryKey: ["clientes"],
+    staleTime: 1000 * 60 * 5, // 5 minutos
     queryFn: () => clientesUseCases.getClientes(),
+  });
+}
+
+export function useGetAvalesQuery() {
+  return useQuery({
+    queryKey: ["avales"],
+    staleTime: 1000 * 60 * 5, // 5 minutos
+    queryFn: () => clientesUseCases.getAvales(),
   });
 }

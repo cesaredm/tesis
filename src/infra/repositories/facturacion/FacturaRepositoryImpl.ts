@@ -27,6 +27,7 @@ export class FacturaRepositoryImpl implements FacturaRepository {
     } else {
       const detalle: DetalleSave = {
         ...producto,
+        producto: producto.id,
         precio: producto.precioVenta,
         cantidad: cantidad,
         importe: cantidad * producto.precioVenta,
@@ -48,7 +49,8 @@ export class FacturaRepositoryImpl implements FacturaRepository {
   actualizarFactura(factura: FacturaUpdate): Promise<RespuestaApi> {
     throw new Error("Method not implemented.");
   }
-  getFacturas(fecha: string | Date): Promise<Factura[]> {
-    throw new Error("Method not implemented.");
+  async getFacturas(fecha: string | Date): Promise<Factura[]> {
+    const {data} = await axios.get('/reportes/facturas', {params: {fecha}})
+    return data;
   }
 }
