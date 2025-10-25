@@ -3,6 +3,7 @@ import { Producto } from "@/domain/entities/Productos";
 import { FacturaRepository } from "@/domain/repositories/Factura.repository";
 import { RespuestaApi } from "@/types";
 import { axios } from "@/utils/axiosConfig";
+import { format } from "@formkit/tempo";
 
 export class FacturaRepositoryImpl implements FacturaRepository {
   agregarDetalle(producto: Producto, cantidad: number, detalles: Map<string | number, DetalleSave>): RespuestaApi {
@@ -50,7 +51,8 @@ export class FacturaRepositoryImpl implements FacturaRepository {
     throw new Error("Method not implemented.");
   }
   async getFacturas(fecha: string | Date): Promise<Factura[]> {
-    const {data} = await axios.get('/reportes/facturas', {params: {fecha}})
+    const formatedDate = format({ date: fecha, format: "YYYY-MM-DD", tz: "America/Tegucigalpa" });
+    const { data } = await axios.get("/reportes/facturas", { params: { fecha: formatedDate } });
     return data;
   }
 }

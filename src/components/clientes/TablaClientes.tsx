@@ -12,17 +12,19 @@ import { FilterMatchMode } from "primereact/api";
 import { InputText } from "primereact/inputtext";
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
+import { useRouter } from "next/navigation";
 
 export function TablaClientes() {
   const { data: clientes, isLoading, isError } = useGetClientesQuery();
   const [filters, setFilters] = useState<DataTableFilterMeta>({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
+  const router = useRouter();
 
   function AccionesTemplate(row: Cliente) {
     return (
       <div>
-        <Button severity="success" icon="pi pi-pencil" size="small" />
+        <Button severity="success" text icon="pi pi-pencil" size="small" onClick={() => router.push(`/work/clientes/edit?cliente=${JSON.stringify(row)}`)} />
       </div>
     );
   }
@@ -50,7 +52,20 @@ export function TablaClientes() {
   return (
     <section>
       <HeaderForm description="Lista de clientes" title="Clientes" />
-      <DataTable value={clientes} header={Header} dataKey={"idCliente"} emptyMessage={isLoading ? <Spinner /> : isError ? "Error al cargar los datos" : "No hay datos disponibles"} showGridlines rowHover stripedRows filters={filters} globalFilterFields={["nombreCompleto", "dni", "direccion", "departamento", "municipio", "barrio", "lugarTrabajo", "telefono"]} paginator rows={10} rowsPerPageOptions={[10, 25, 50]}>
+      <DataTable
+        value={clientes}
+        header={Header}
+        dataKey={"idCliente"}
+        emptyMessage={isLoading ? <Spinner /> : isError ? "Error al cargar los datos" : "No hay datos disponibles"}
+        showGridlines
+        rowHover
+        stripedRows
+        filters={filters}
+        globalFilterFields={["nombreCompleto", "dni", "direccion", "departamento", "municipio", "barrio", "lugarTrabajo", "telefono"]}
+        paginator
+        rows={10}
+        rowsPerPageOptions={[10, 25, 50]}
+      >
         <Column body={AccionesTemplate} headerStyle={{ width: "3rem" }} />
         <Column header="Nombre completo" field="nombreCompleto" />
         <Column header="DNI" field="dni" />
