@@ -1,34 +1,97 @@
-import { formatDecimal } from "@/utils/helpers";
-import Image from "next/image";
+"use client";
 import { Divider } from "primereact/divider";
-
-function CardReportes({ title, description, monto, imageSrc }: { title: string; description: string; monto: number; imageSrc: string }) {
-  return (
-    <div className="flex border border-primary/40 h-[4rem] rounded-2xl hover:bg-primary/20 hover:cursor-pointer">
-      <div className="w-1/12 flex justify-center items-center h-full bg-primary/10 rounded-l-2xl">
-        <Image src={imageSrc} alt="icono de factura" width={32} height={32} />
-      </div>
-      <div className="flex justify-between w-11/12 items-center px-2">
-        <div>
-          <span className="text-lg">{title}</span>
-        </div>
-        <div>
-          <p className="text-2xl font-semibold">L. {formatDecimal(monto)}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
+import { CardReportes } from "@/components/reportes/CardReportes";
+import { BoxForm } from "@/components/shared/BoxForm";
+import { Calendar } from "primereact/calendar";
+import { useState } from "react";
+import { reportesUseCases } from "@/domain/usecases/ReportesUseCases";
+import { Estado } from "@/domain/entities/Reportes";
+import { Button } from "primereact/button";
+import { Spinner2 } from "@/components/shared/Spinner2";
+import { InputSwitch } from "primereact/inputswitch";
 
 export default function EstadoDiarioPage() {
+  const [fecha1, setFecha1] = useState<Date | null>(new Date());
+  const [fecha2, setFecha2] = useState<Date | null>(new Date());
+  const [estado, setEstado] = useState<Estado>({
+    ventasEfectivo: 0,
+    ventasCreditos: 0,
+    salidasEfectivo: 0,
+    entradasEfectivo: 0,
+    existenciaCaja: 0,
+  });
+  const [loading, setLoading] = useState(false);
+  const [isMensual, setIsMensual] = useState(false);
+
+  async function getEstadoDiario() {
+    if (fecha1) {
+      setLoading(true);
+      const [data, error] = await reportesUseCases.getEstadoDiario(fecha1);
+      if (data) {
+        setEstado(data);
+      }
+
+      if (error) {
+        console.log(error);
+      }
+      setLoading(false);
+    }
+  }
+
+  async function getEstadoMensual() {
+    if (fecha1 && fecha2) {
+      setLoading(true);
+      const [data, error] = await reportesUseCases.getEstadoMensual(fecha1, fecha2);
+      if (data) {
+        setEstado(data);
+      }
+
+      if (error) {
+        console.log(error);
+      }
+      setLoading(false);
+    }
+  }
+
+  async function generarReporte(){
+    if(isMensual){
+      await getEstadoMensual();
+    }else{
+      await getEstadoDiario();
+    }
+  }
+
   return (
     <div className="w-1/2 m-auto flex flex-col gap-2">
-      <CardReportes title="Facturas Emitidas" description="Total de facturas emitidas en el dia" monto={12500} imageSrc="/reportes/efectivo.png" />
-      <CardReportes title="Creditos Otorgados" description="Total de facturas emitidas en el dia" monto={10000} imageSrc="/reportes/creditos.png" />
-      <CardReportes title="Salidda de efectivo" description="Total de facturas emitidas en el dia" monto={5505} imageSrc="/reportes/salida.png" />
-      <CardReportes title="Ingresos de efectivo" description="Total de facturas emitidas en el dia" monto={0} imageSrc="/reportes/ingresos.png" />
+      <header className="flex justify-between">
+        <BoxForm>
+          <label htmlFor="">fechas de filtro</label>
+          <div className="flex gap-1 flex-wrap">
+            <Calendar placeholder="De" value={fecha1} showIcon dateFormat="DD, dd/mm/yy" onChange={(e) => setFecha1(e.value as Date)} />
+            {isMensual && <Calendar placeholder="Hasta" value={fecha2} showIcon dateFormat="DD, dd/mm/yy" onChange={(e) => setFecha2(e.value as Date)} />}
+            <Button size="small" label="Actualizar" onClick={generarReporte} icon="pi pi-refresh" loading={loading} />
+          </div>
+        </BoxForm>
+        <BoxForm>
+          <label htmlFor="">{isMensual ? "Mes" : "Diario"}</label>
+          <InputSwitch checked={isMensual} onChange={(e) => setIsMensual(e.value)} />
+        </BoxForm>
+      </header>
       <Divider />
-      <CardReportes title="Total de efectivo en caja" description="Total de facturas emitidas en el dia" monto={60040} imageSrc="/reportes/existenciaCaja.png" />
+
+      {loading ? (
+        <Spinner2 />
+      ) : (
+        <>
+          <CardReportes title="Ventas de Efectivo" description="Total de facturas emitidas en el dia" monto={estado.ventasEfectivo} imageSrc="/reportes/efectivo.png" />
+
+          <CardReportes title="Ventas de Creditos" description="Total de facturas emitidas en el dia" monto={estado.ventasCreditos} imageSrc="/reportes/creditos.png" />
+          <CardReportes title="Salida de Efectivo" description="Total de facturas emitidas en el dia" monto={estado.salidasEfectivo} imageSrc="/reportes/salida.png" />
+          <CardReportes title="Entrada de Efectivo" description="Total de facturas emitidas en el dia" monto={estado.entradasEfectivo} imageSrc="/reportes/ingresos.png" />
+          <Divider />
+          <CardReportes title="Total de Efectivo en Caja" description="Total de facturas emitidas en el dia" monto={estado.existenciaCaja} imageSrc="/reportes/existenciaCaja.png" />
+        </>
+      )}
     </div>
   );
 }

@@ -23,8 +23,9 @@ export function TablaClientes() {
 
   function AccionesTemplate(row: Cliente) {
     return (
-      <div>
+      <div className="flex gap-0.5"  >
         <Button severity="success" text icon="pi pi-pencil" size="small" onClick={() => router.push(`/work/clientes/edit?cliente=${JSON.stringify(row)}`)} />
+        <Button severity="info" text icon="pi pi-info" size="small" onClick={() => router.push(`/work/clientes/${row.idCliente}`)} />
       </div>
     );
   }
@@ -66,7 +67,7 @@ export function TablaClientes() {
         rows={10}
         rowsPerPageOptions={[10, 25, 50]}
       >
-        <Column body={AccionesTemplate} headerStyle={{ width: "3rem" }} />
+        <Column body={AccionesTemplate} headerStyle={{ width: "5rem" }} />
         <Column header="Nombre completo" field="nombreCompleto" />
         <Column header="DNI" field="dni" />
         <Column header="Dirección" field="direccion" />
