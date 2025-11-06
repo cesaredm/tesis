@@ -7,7 +7,7 @@ export interface Pago {
 }
 
 export interface PagoSave{
-  fecha: string | Date;
+  fecha: Date;
   monto: number;
   credito: number;
 }

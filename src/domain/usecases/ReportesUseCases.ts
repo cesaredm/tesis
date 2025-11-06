@@ -2,7 +2,7 @@ import { AxiosError } from "axios";
 import { ReportesRepository } from "../repositories/Reportes.repository";
 import { Result } from "@/types/resultPromise";
 import { Estado } from "../entities/Reportes";
-import { ReportesRepositoryImpl } from "@/infra/ReportesRepositoryImpl";
+import { ReportesRepositoryImpl } from "@/infra/repositories/ReportesRepositoryImpl";
 
 export class ReportesUseCases {
   constructor(private reportesRepository: ReportesRepository) {}

@@ -24,6 +24,7 @@ import { useGuardarFactura } from "@/hooks/useFacturacion";
 import { toastError, toastSuccess } from "@/utils/formatToast";
 import { Panel } from "primereact/panel";
 import { Card } from "primereact/card";
+import { BoxForm } from "../shared/BoxForm";
 
 export function TablaFactura() {
   const { detalles, setReloadView, reloadView, factura, setCampoFactura, limpiarTodo } = useFacturaStore((state) => state);
@@ -200,45 +201,53 @@ export function TablaFactura() {
 
   function DatosCredito() {
     return (
-      <section className="flex flex-wrap gap-2">
-        <div className="flex flex-col gap-1 w-full lg:w-1/4">
-          <label htmlFor="">Cliente</label>
-          <Dropdown
-            onChange={(e) => setCampoFactura("cliente", e.value)}
-            options={clientes}
-            value={factura.cliente}
-            optionLabel="nombreCompleto"
-            optionValue="idCliente"
-            placeholder="Selecciona un cliente"
-            filter
-            emptyMessage={isLoadingClientes ? "Cargando..." : "No se encontraron clientes."}
-          />
+      <div>
+        <section className="flex flex-wrap gap-2">
+          <div className="flex flex-col gap-1 w-full lg:w-1/4">
+            <label htmlFor="">Cliente</label>
+            <Dropdown
+              onChange={(e) => setCampoFactura("cliente", e.value)}
+              options={clientes}
+              value={factura.cliente}
+              optionLabel="nombreCompleto"
+              optionValue="idCliente"
+              placeholder="Selecciona un cliente"
+              filter
+              emptyMessage={isLoadingClientes ? "Cargando..." : "No se encontraron clientes."}
+            />
+          </div>
+          <div className="flex flex-col gap-1 w-full lg:w-1/4">
+            <label htmlFor="">Aval</label>
+            <Dropdown
+              onChange={(e) => setCampoFactura("aval", e.value)}
+              options={avales?.filter((a) => a.cliente != factura.cliente)}
+              value={factura.aval}
+              optionLabel="nombreCompleto"
+              optionValue="id"
+              placeholder="Selecciona un cliente"
+              filter
+              emptyMessage={isLoadingAvales ? "Cargando..." : "No se encontraron avales."}
+            />
+          </div>
+          <div className="flex items-end">
+            <Button
+              icon="pi pi-times"
+              label="Quitar"
+              onClick={() => {
+                setCampoFactura("cliente", null);
+                setCampoFactura("aval", null);
+              }}
+              disabled={!factura.cliente || !factura.aval}
+            />
+          </div>
+        </section>
+        <div className="flex">
+          <BoxForm>
+            <label htmlFor="">Comprador</label>
+            <InputText name="comprador" value={factura.comprador} onChange={(e) => setCampoFactura("comprador", e.target.value)} />
+          </BoxForm>
         </div>
-        <div className="flex flex-col gap-1 w-full lg:w-1/4">
-          <label htmlFor="">Aval</label>
-          <Dropdown
-            onChange={(e) => setCampoFactura("aval", e.value)}
-            options={avales}
-            value={factura.aval}
-            optionLabel="nombreCompleto"
-            optionValue="id"
-            placeholder="Selecciona un cliente"
-            filter
-            emptyMessage={isLoadingAvales ? "Cargando..." : "No se encontraron avales."}
-          />
-        </div>
-        <div className="flex items-end">
-          <Button
-            icon="pi pi-times"
-            label="Quitar"
-            onClick={() => {
-              setCampoFactura("cliente", null);
-              setCampoFactura("aval", null);
-            }}
-            disabled={!factura.cliente || !factura.aval}
-          />
-        </div>
-      </section>
+      </div>
     );
   }
 
@@ -290,7 +299,7 @@ export function TablaFactura() {
         </form>
       </OverlayPanel>
       <Card>
-        <Panel header="Datos de crédito" className="mb-2">
+        <Panel header="Datos de generales" className="mb-2">
           <DatosCredito />
         </Panel>
         <DataTable value={Array.from(detalles.values())} selectionMode={"multiple"} header={Header} footer={FooterTable} selection={seleccion} onSelectionChange={({ value }) => setSeleccion(value)} emptyMessage="Factura vacia." showGridlines>

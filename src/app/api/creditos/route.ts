@@ -7,9 +7,9 @@ export async function GET(req: NextRequest) {
   const conn = await conexiondb.getConnection();
   try {
     const cliente = req.nextUrl.searchParams.get("cliente");
-    const [creditos] = await conn.query<RowDataPacket[]>("SELECT * from creditostienda WHERE cliente = ?", [cliente]);
+    const [creditos] = await conn.query<RowDataPacket[]>("SELECT *, DATE_FORMAT(fechaEmisionFactura, '%d-%m-%Y, %r') f from creditostienda WHERE cliente = ?", [cliente]);
     for (const credito of creditos) {
-      const [detalles] = await conn.query("SELECT * FROM detalles WHERE factura = ?", [credito.numeroFactura]);
+      const [detalles] = await conn.query("SELECT d.*, p.descripcion, p.marca, p.modelo FROM detalles d INNER JOIN inventariotienda p ON d.producto = p.id WHERE d.factura = ?", [credito.numeroFactura]);
       credito.detalles = detalles;
     }
     return Response.json(creditos);

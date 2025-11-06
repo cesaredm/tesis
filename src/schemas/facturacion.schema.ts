@@ -22,6 +22,7 @@ export const FacturaSchema = z.object({
 			required_error: "El empleado es requerido",
 		})
 		.positive("El empleado debe ser un número positivo"),
+	comprador: z.string({invalid_type_error: "Comprador debe ser una cadena de texto"}).optional().nullable(),
 });
 
 export const DetalleFacturaSchema = z.object({

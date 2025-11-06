@@ -3,6 +3,7 @@ import { ClientesUseCases } from "../domain/usecases/ClientesUseCases";
 import { ClientesRepository } from "@/domain/repositories/Clientes.repository";
 import { ClientesRepositoryImpl } from "@/infra/repositories/ClientesRepositoryImpl";
 import { Cliente, ClienteSave } from "@/domain/entities/Clientes";
+import { PagoSave } from "@/domain/entities/Pagos";
 
 const clientesRepository: ClientesRepository = new ClientesRepositoryImpl();
 const clientesUseCases: ClientesUseCases = new ClientesUseCases(clientesRepository);
@@ -42,4 +43,26 @@ export function useGetAvalesQuery() {
     staleTime: 1000 * 60 * 5, // 5 minutos
     queryFn: () => clientesUseCases.getAvales(),
   });
+}
+
+export function useGetPagosQuery(cliente: number) {
+  const pagos = useQuery({
+    queryKey: ["pagos", cliente],
+    staleTime: 1000 * 60 * 5, // 5 minutos
+    queryFn: () => clientesUseCases.getPagos(cliente),
+  });
+
+  return pagos;
+}
+
+export function useGenerarPagoMutation() {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: (pago: PagoSave) => clientesUseCases.generarPago(pago),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pagos"] });
+    },
+  });
+
+  return mutation;
 }

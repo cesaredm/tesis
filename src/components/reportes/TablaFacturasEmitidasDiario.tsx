@@ -77,6 +77,7 @@ export function FacturasEmitidasDiario() {
         <Column field={"total"} body={TotalTemplate} header={"total"} />
         <Column field={"clientefullname"} header={"Cliente"} />
         <Column field={"avalfullname"} header={"Aval"} />
+        <Column field={"comprador"} header={"Comprador"} />
         <Column field={"empleadofullname"} header={"Colaborador"} />
       </DataTable>
     </div>

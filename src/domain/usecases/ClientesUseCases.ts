@@ -19,4 +19,12 @@ export class ClientesUseCases {
   async actualizarCliente(cliente: Cliente) {
     return await this.clientesRepository.actualizarCliente(cliente);
   }
+
+  async generarPago(pago: any) {
+    return await this.clientesRepository.generarPago(pago);
+  }
+
+  async getPagos(cliente: number) {
+    return await this.clientesRepository.getPagos(cliente);
+  }
 }

@@ -25,7 +25,8 @@ export function TablaClientes() {
     return (
       <div className="flex gap-0.5"  >
         <Button severity="success" text icon="pi pi-pencil" size="small" onClick={() => router.push(`/work/clientes/edit?cliente=${JSON.stringify(row)}`)} />
-        <Button severity="info" text icon="pi pi-info" size="small" onClick={() => router.push(`/work/clientes/${row.idCliente}`)} />
+        <Button severity="info" text icon="pi pi-info-circle" size="small" onClick={() => router.push(`/work/clientes/${row.idCliente}`)} />
+        <Button severity="success" text icon="pi pi-money-bill" size="small" onClick={() => router.push(`/work/clientes/pagos/${row.idCliente}`)} />
       </div>
     );
   }

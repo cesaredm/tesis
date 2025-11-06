@@ -30,6 +30,7 @@ export interface FacturaSave {
   fecha: string | Date;
   cliente: number | null;
   aval: number | null;
+  comprador?: string;
 }
 
 export interface FacturaUpdate extends FacturaSave {
