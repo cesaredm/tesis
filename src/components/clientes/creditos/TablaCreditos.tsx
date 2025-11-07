@@ -7,6 +7,8 @@ import { Column } from "primereact/column";
 import { DataTable, DataTableExpandedRows, DataTableValueArray } from "primereact/datatable";
 import { useState } from "react";
 import { DialogPago } from "./DialogPago";
+import { Credito } from "@/domain/entities/Creditos";
+import { Tag } from "primereact/tag";
 
 export function TablaCreditos({ cliente }: { cliente: number }) {
   const { data: creditos, isLoading, isError } = useCreditosQuery(cliente);
@@ -23,12 +25,26 @@ export function TablaCreditos({ cliente }: { cliente: number }) {
     );
   }
 
+  function MontoTemplate(row: Credito) {
+    return <div className="text-end">{formatDecimal(row.total)}</div>;
+  }
+  function PagosTemplate(row: Credito) {
+    return <div className="text-end">{formatDecimal(row.pagos)}</div>;
+  }
+
   function AccionesTemplate(row: any) {
     return (
       <div>
         <DialogPago credito={row.numeroCredito} />
       </div>
     );
+  }
+
+  function EstadoTemplate(row: Credito){
+    const saldo = Number(row.total) - Number(row.pagos);
+    return (
+      saldo > 0 ? <Tag severity={'warning'} value={'PENDIENTE'} /> : <Tag severity="success" value="PAGADO" />
+    )
   }
 
   return (
@@ -55,9 +71,11 @@ export function TablaCreditos({ cliente }: { cliente: number }) {
         <Column header="Fecha Emision Factura" field="f" />
         <Column header="Cliente" field="clientefullname" />
         <Column header="Aval" field="aval" />
-        <Column header="Monto" field="total" />
+        <Column header="Monto" field="total" body={MontoTemplate} />
+        <Column header="Pagos" field="pagos" body={PagosTemplate} />
         <Column header="# Factura" field="numeroFactura" />
         <Column header="# Credito" field="numeroCredito" />
+        <Column header="Estado" field="estado" body={EstadoTemplate} />
       </DataTable>
     </div>
   );

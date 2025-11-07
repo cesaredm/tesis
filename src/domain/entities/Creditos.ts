@@ -1,10 +1,14 @@
 export interface Credito {
   id: number;
-  fecha: string | Date;
   cliente: number;
-  clienteFullName: string;
-  aval: number;
-  avalFullName: string;
+  aval: string;
+  numeroFactura: number;
+  fechaEmisionFactura: string | Date;
+  numeroCredito: number;
+  fechaCreacionCredito: string | Date;
+  total: number;
+  clientefullname: string;
+  pagos: number;
 }
 
 export interface CreditoSave {

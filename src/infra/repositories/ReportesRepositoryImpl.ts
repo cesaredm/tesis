@@ -12,7 +12,7 @@ export class ReportesRepositoryImpl implements ReportesRepository {
       fecha1 = format({ date: fecha1, format: "YYYY-MM-DD", tz: "America/tegucigalpa" });
       const { data } = await axios.get(`/reportes/estadoDiario`, { params: { fecha1, fecha2: fecha1 } });
       const estado = data[0];
-      const existenciaCaja = formatDecimal(Number(estado.ventasEfectivo) + Number(estado.entradas) - Number(estado.salidas));
+      const existenciaCaja = formatDecimal(Number(estado.ventasEfectivo) + Number(estado.entradas) + Number(estado.pagos) - Number(estado.salidas));
 
       return [
         {
@@ -20,6 +20,7 @@ export class ReportesRepositoryImpl implements ReportesRepository {
           ventasCreditos: formatDecimal(Number(estado.ventasCredito)),
           salidasEfectivo: formatDecimal(Number(estado.salidas)),
           entradasEfectivo: formatDecimal(Number(estado.entradas)),
+          pagos: formatDecimal(Number(estado.pagos)),
           existenciaCaja: existenciaCaja,
         },
         null,
@@ -34,13 +35,14 @@ export class ReportesRepositoryImpl implements ReportesRepository {
     try {
       const { data } = await axios.get(`/reportes/estadoDiario`, { params: { fecha1, fecha2 } });
       const estado = data[0];
-      const existenciaCaja = formatDecimal(Number(estado.ventasEfectivo) + Number(estado.entradas) - Number(estado.salidas));
+      const existenciaCaja = formatDecimal(Number(estado.ventasEfectivo) + Number(estado.entradas) + Number(estado.pagos) - Number(estado.salidas));
       return [
         {
           ventasEfectivo: formatDecimal(Number(estado.ventasEfectivo)),
           ventasCreditos: formatDecimal(Number(estado.ventasCredito)),
           salidasEfectivo: formatDecimal(Number(estado.salidas)),
           entradasEfectivo: formatDecimal(Number(estado.entradas)),
+          pagos: formatDecimal(Number(estado.pagos)),
           existenciaCaja: existenciaCaja,
         },
         null,

@@ -29,12 +29,17 @@ export class ClientesRepositoryImpl implements ClientesRepository {
   async generarPago(pago: PagoSave): Promise<RespuestaApi> {
     console.log(pago);
     const fechaFormat = format({ date: pago.fecha, format: "YYYY-MM-DD HH:mm:ss", tz: "America/Tegucigalpa" });
-    const { data } = await axios.post("/creditos/pagos", { ...pago, fecha: fechaFormat });
+    const { data } = await axios.post("/creditos/pagos", { ...pago, fecha: fechaFormat, credito: Number(pago.credito) });
     return data;
   }
 
   async getPagos(cliente: number): Promise<Pago[]> {
-    const { data } = await axios.get("/creditos/pagos", { params: { cliente } });
+    const { data } = await axios.get("/creditos/pagos", { params: { id: cliente } });
+    return data;
+  }
+
+  async eliminarPago(id: number): Promise<RespuestaApi> {
+    const { data } = await axios.delete(`/creditos/pagos/`, { data: { id } });
     return data;
   }
 }

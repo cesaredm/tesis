@@ -61,6 +61,20 @@ export function useGenerarPagoMutation() {
     mutationFn: (pago: PagoSave) => clientesUseCases.generarPago(pago),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pagos"] });
+      queryClient.invalidateQueries({ queryKey: ["creditos"] });
+    },
+  });
+
+  return mutation;
+}
+
+export function useEliminarPagoMutation() {
+  const queryClient = useQueryClient();
+  const mutation = useMutation({
+    mutationFn: (id: number) => clientesUseCases.eliminarPago(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pagos"] });
+      queryClient.invalidateQueries({ queryKey: ["creditos"] });
     },
   });
 

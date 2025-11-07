@@ -26,7 +26,7 @@ export function DialogPago({ credito }: Props) {
     setValue,
     reset,
     handleSubmit,
-  } = useForm<PagoSave>({ defaultValues: { credito, monto: 0 } });
+  } = useForm<PagoSave>({ defaultValues: { fecha: new Date(),credito, monto: 0 } });
 
   const toast = useRef<Toast>(null);
 
@@ -85,7 +85,7 @@ export function DialogPago({ credito }: Props) {
               render={({ field }) => (
                 <BoxForm>
                   <label htmlFor="">Monto</label>
-                  <InputNumber value={field.value} onChange={({ value }) => field.onChange(value)} mode="currency" currency="HND" locale="es-NI" maxFractionDigits={2} minFractionDigits={2} />
+                  <InputNumber value={field.value} onChange={({ value }) => field.onChange(value)} mode="currency" currency="HND" locale="es-NI" maxFractionDigits={2} minFractionDigits={2} onFocus={(e)=>e.target.select()} autoFocus />
                   {errors.monto && <p className="text-red-500">{errors.monto.message}</p>}
                 </BoxForm>
               )}

@@ -69,6 +69,7 @@ export function TablaClientes() {
         rowsPerPageOptions={[10, 25, 50]}
       >
         <Column body={AccionesTemplate} headerStyle={{ width: "5rem" }} />
+        <Column header="# Cliente" field="idCliente" />
         <Column header="Nombre completo" field="nombreCompleto" />
         <Column header="DNI" field="dni" />
         <Column header="Dirección" field="direccion" />

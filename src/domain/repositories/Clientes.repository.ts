@@ -9,4 +9,5 @@ export interface ClientesRepository {
   actualizarCliente(cliente: Cliente): Promise<RespuestaApi>;
   generarPago(pago: PagoSave): Promise<RespuestaApi>;
   getPagos(cliente: number): Promise<Pago[]>;
+  eliminarPago(id: number): Promise<RespuestaApi>;
 }

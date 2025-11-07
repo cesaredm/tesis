@@ -27,4 +27,8 @@ export class ClientesUseCases {
   async getPagos(cliente: number) {
     return await this.clientesRepository.getPagos(cliente);
   }
+
+  async eliminarPago(id: number) {
+    return await this.clientesRepository.eliminarPago(id);
+  }
 }

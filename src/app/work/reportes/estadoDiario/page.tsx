@@ -18,6 +18,7 @@ export default function EstadoDiarioPage() {
     ventasCreditos: 0,
     salidasEfectivo: 0,
     entradasEfectivo: 0,
+    pagos: 0,
     existenciaCaja: 0,
   });
   const [loading, setLoading] = useState(false);
@@ -62,7 +63,7 @@ export default function EstadoDiarioPage() {
   }
 
   return (
-    <div className="w-1/2 m-auto flex flex-col gap-2">
+    <div className="w-full lg:w-1/2 m-auto flex flex-col gap-2">
       <header className="flex justify-between">
         <BoxForm>
           <label htmlFor="">fechas de filtro</label>
@@ -88,6 +89,7 @@ export default function EstadoDiarioPage() {
           <CardReportes title="Ventas de Creditos" description="Total de facturas emitidas en el dia" monto={estado.ventasCreditos} imageSrc="/reportes/creditos.png" />
           <CardReportes title="Salida de Efectivo" description="Total de facturas emitidas en el dia" monto={estado.salidasEfectivo} imageSrc="/reportes/salida.png" />
           <CardReportes title="Entrada de Efectivo" description="Total de facturas emitidas en el dia" monto={estado.entradasEfectivo} imageSrc="/reportes/ingresos.png" />
+          <CardReportes title="Entrada de pagos" description="Total de pagos" monto={estado.pagos} imageSrc="/reportes/ingresos.png" />
           <Divider />
           <CardReportes title="Total de Efectivo en Caja" description="Total de facturas emitidas en el dia" monto={estado.existenciaCaja} imageSrc="/reportes/existenciaCaja.png" />
         </>
