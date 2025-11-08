@@ -1,6 +1,10 @@
 import { FormularioMarca } from "@/components/inventario/marcas/FormularioMarca";
 
-export default async function Edit({ searchParams }: { searchParams: { marca: string } }) {
+interface Props {
+  searchParams: Promise<{ marca: string }>;
+}
+
+export default async function Edit({ searchParams }: Props) {
   const marca: { marca: string } = await searchParams;
   return (
     <div>

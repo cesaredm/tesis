@@ -34,10 +34,6 @@ export function TablaPedidos() {
     );
   }
 
-  const allowExpansion = (row: Pedido) => {
-    return row?.detalles!.length > 0;
-  };
-
   function AccionesTemplate(row: Pedido) {
     return (
       <div>

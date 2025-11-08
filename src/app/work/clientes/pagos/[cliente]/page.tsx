@@ -1,6 +1,12 @@
 import { TablaPagosCliente } from "@/components/clientes/creditos/TablaPagosCliente";
 
-export default async function PagosClientePage({ params }: { params: { cliente: string } }) {
+interface Props {
+  params: Promise<{
+    cliente: string;
+  }>;
+}
+
+export default async function PagosClientePage({ params }: Props) {
   const { cliente } = await params;
 
   return (

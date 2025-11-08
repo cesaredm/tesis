@@ -12,10 +12,11 @@ export async function POST(request: Request) {
   const conn = await conexiondb.getConnection();
   try {
     const sesion = await auth();
+    //@ts-expect-error holla
     const empleado = sesion?.user?.empleado;
     const body = await request.json();
     const listaDetalles = body.detalles;
-    const { detalles, ...factura } = body.factura;
+    const factura = body.factura;
     await conn.beginTransaction();
 
     if (factura.cliente && factura.cliente !== null) {
@@ -29,8 +30,7 @@ export async function POST(request: Request) {
       factura.credito = resultCredito.insertId;
     }
 
-    const facturaValidada = FacturaSchema.parse({...factura, empleado, fecha: format({ date: new Date(), format: "YYYY-MM-DD HH:mm:ss", tz: "America/Tegucigalpa" }),
-    });
+    const facturaValidada = FacturaSchema.parse({ ...factura, empleado, fecha: format({ date: new Date(), format: "YYYY-MM-DD HH:mm:ss", tz: "America/Tegucigalpa" }) });
 
     const [resFactura] = await conn.query<ResultSetHeader>("INSERT INTO facturas SET ?", [{ ...facturaValidada }]);
 

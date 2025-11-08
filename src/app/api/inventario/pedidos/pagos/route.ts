@@ -13,10 +13,9 @@ export async function POST(req: Request) {
     const pagoValidado = PagoPedidoSchema.parse(data);
     await conexiondb.query("INSERT INTO pagospedidos SET ?", [pagoValidado]);
     return Response.json(respuesta(), { status: 200 });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
     if (error instanceof ZodError) return Response.json(respuestaError({ error: error.issues.map((issue) => issue.message).join(", ") }), { status: 400 });
-    // @ts-ignore
     return Response.json(respuestaError({error: error.sqlMessage}), { status: 500 });
   }
 }

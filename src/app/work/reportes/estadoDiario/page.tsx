@@ -54,10 +54,10 @@ export default function EstadoDiarioPage() {
     }
   }
 
-  async function generarReporte(){
-    if(isMensual){
+  async function generarReporte() {
+    if (isMensual) {
       await getEstadoMensual();
-    }else{
+    } else {
       await getEstadoDiario();
     }
   }
@@ -84,14 +84,14 @@ export default function EstadoDiarioPage() {
         <Spinner2 />
       ) : (
         <>
-          <CardReportes title="Ventas de Efectivo" description="Total de facturas emitidas en el dia" monto={estado.ventasEfectivo} imageSrc="/reportes/efectivo.png" />
+          <CardReportes title="Ventas de Efectivo" monto={estado.ventasEfectivo} imageSrc="/reportes/efectivo.png" />
 
-          <CardReportes title="Ventas de Creditos" description="Total de facturas emitidas en el dia" monto={estado.ventasCreditos} imageSrc="/reportes/creditos.png" />
-          <CardReportes title="Salida de Efectivo" description="Total de facturas emitidas en el dia" monto={estado.salidasEfectivo} imageSrc="/reportes/salida.png" />
-          <CardReportes title="Entrada de Efectivo" description="Total de facturas emitidas en el dia" monto={estado.entradasEfectivo} imageSrc="/reportes/ingresos.png" />
-          <CardReportes title="Entrada de pagos" description="Total de pagos" monto={estado.pagos} imageSrc="/reportes/ingresos.png" />
+          <CardReportes title="Ventas de Creditos" monto={estado.ventasCreditos} imageSrc="/reportes/creditos.png" />
+          <CardReportes title="Salida de Efectivo" monto={estado.salidasEfectivo} imageSrc="/reportes/salida.png" />
+          <CardReportes title="Entrada de Efectivo" monto={estado.entradasEfectivo} imageSrc="/reportes/ingresos.png" />
+          <CardReportes title="Entrada de pagos" monto={estado.pagos} imageSrc="/reportes/ingresos.png" />
           <Divider />
-          <CardReportes title="Total de Efectivo en Caja" description="Total de facturas emitidas en el dia" monto={estado.existenciaCaja} imageSrc="/reportes/existenciaCaja.png" />
+          <CardReportes title="Total de Efectivo en Caja" monto={estado.existenciaCaja} imageSrc="/reportes/existenciaCaja.png" />
         </>
       )}
     </div>

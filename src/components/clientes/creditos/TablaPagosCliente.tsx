@@ -11,7 +11,7 @@ import { useEffect, useRef } from "react";
 import { toastError, toastSuccess } from "@/utils/formatToast";
 
 export function TablaPagosCliente({ cliente }: { cliente: number }) {
-  const { data: pagos, isLoading, isError, error } = useGetPagosQuery(cliente);
+  const { data: pagos, isLoading, isError} = useGetPagosQuery(cliente);
   const { mutate: eliminarPago, isPending, isError: isDeleteError, isSuccess: isSuccessEliminar, error: deleteError, data: dataEliminar } = useEliminarPagoMutation();
 
   const toast = useRef<Toast>(null);

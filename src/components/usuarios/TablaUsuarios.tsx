@@ -18,6 +18,7 @@ export function TablaUsuarios() {
   }
 
   function AccionesTemplate(row: Usuario) {
+    console.log(row)
     return (
       <div className="flex gap-1">
         <Button size="small" text icon="pi pi-pencil" severity="success" />

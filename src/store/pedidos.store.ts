@@ -1,4 +1,4 @@
-import { DetallesPedidoSave, PedidoSave } from "@/types";
+import { DetallesPedidoSave, PedidoSave } from "@/domain/entities/Pedidos";
 import { create } from "zustand";
 
 interface PedidoStore {

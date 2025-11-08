@@ -4,7 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import { Calendar } from "primereact/calendar";
 import { InputNumber } from "primereact/inputnumber";
 import { Button } from "primereact/button";
-import { useGuardarPagoPedidoMutation, useGuardarPedidoMutation } from "@/hooks/pedidos";
+import { useGuardarPagoPedidoMutation} from "@/hooks/pedidos";
 import { PagoPedidoSave } from "@/domain/entities/Pedidos";
 import { Toast } from "primereact/toast";
 import { toastError, toastSuccess } from "@/utils/formatToast";
@@ -19,7 +19,7 @@ function BoxForm({ children }: { children: React.ReactNode }) {
 
 export function FormPagoPedido({ pedido }: { pedido: number }) {
   const {mutate: guardarPago, isPending, isSuccess, isError, error, data} = useGuardarPagoPedidoMutation()
-  const { control, handleSubmit, formState: { errors }, setValue, reset } = useForm<PagoPedidoSave>({
+  const { control, handleSubmit, formState: { errors }, reset } = useForm<PagoPedidoSave>({
     defaultValues: {
       pedido: Number(pedido),
       fecha: new Date(),
@@ -80,7 +80,7 @@ export function FormPagoPedido({ pedido }: { pedido: number }) {
           </div>
           <div className={"flex justify-end gap-1"}>
             <Button label={"limpiar"} icon={"pi pi-eraser"} size={"small"} severity={"info"} onClick={() => reset()} />
-            <Button label={"Guardar"} icon={"pi pi-check"} size={"small"} type={"submit"} />
+            <Button label={"Guardar"} icon={"pi pi-check"} size={"small"} type={"submit"} loading={isPending} />
           </div>
         </form>
       </div>

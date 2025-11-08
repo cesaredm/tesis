@@ -23,7 +23,6 @@ export function DialogPago({ credito }: Props) {
     register,
     control,
     formState: { errors },
-    setValue,
     reset,
     handleSubmit,
   } = useForm<PagoSave>({ defaultValues: { fecha: new Date(),credito, monto: 0 } });

@@ -1,7 +1,11 @@
 import { CrearCliente } from "@/components/clientes/CrearCliente";
 
-export default function EditClientePage({ searchParams }: { searchParams: { cliente: string} }) {
-  const { cliente } = searchParams;
+interface Props{
+  searchParams: Promise<{cliente: string}>
+}
+
+export default async function EditClientePage({ searchParams }: Props) {
+  const { cliente } = await searchParams;
   return (
     <div>
       <CrearCliente cliente={JSON.parse(cliente)} />

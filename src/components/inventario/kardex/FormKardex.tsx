@@ -84,7 +84,7 @@ export function FormKardex() {
         </section>
         <section className="flex justify-end mt-2 gap-1">
           <Button label="Cancelar" text icon="pi pi-times" size="small" onClick={() => reset()} />
-          <Button label="Guardar" type="submit" size="small" icon="pi pi-check" />
+          <Button label="Guardar" type="submit" size="small" icon="pi pi-check" loading={isPending} />
         </section>
       </form>
     </Fragment>

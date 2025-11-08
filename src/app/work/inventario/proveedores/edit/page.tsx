@@ -1,5 +1,8 @@
 import { Form } from "@/components/inventario/proveedores/Form";
-export default async function EditProveedor({ searchParams }: { searchParams: { proveedor: string } }) {
+interface Props {
+  searchParams: Promise<{ proveedor: string }>;
+}
+export default async function EditProveedor({ searchParams }: Props) {
   const proveedor: { proveedor: string } = await searchParams;
   return (
     <div className="mx-auto w-full lg:w-1/2 flex flex-col gap-4">

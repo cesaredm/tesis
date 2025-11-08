@@ -17,7 +17,7 @@ function BoxForm({ children }: { children: React.ReactNode }) {
   return <div className="flex flex-col gap-1">{children}</div>;
 }
 
-interface Inputs {
+/*interface Inputs {
   codigoBarra: string;
   descripcion: string;
   modelo: string;
@@ -25,7 +25,7 @@ interface Inputs {
   precioVenta: number;
   stock: number;
   marca: number;
-}
+}*/
 
 export function Form({ producto }: { producto?: Producto }) {
   const { data: marcas, isLoading } = useGetMarcasQuery();
@@ -170,7 +170,7 @@ export function Form({ producto }: { producto?: Producto }) {
             render={({ field }) => (
               <BoxForm>
                 <label htmlFor="">Marca*</label>
-                <Dropdown options={marcas} optionLabel="nombre" value={field.value} optionValue="id" onChange={(e) => field.onChange(e.value)} filter />
+                <Dropdown loading={isLoading} options={marcas} optionLabel="nombre" value={field.value} optionValue="id" onChange={(e) => field.onChange(e.value)} filter />
                 {errors.marca && <small className="text-red-500">{errors.marca.message}</small>}
               </BoxForm>
             )}

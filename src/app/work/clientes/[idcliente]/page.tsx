@@ -1,6 +1,12 @@
 import { TablaCreditos } from "@/components/clientes/creditos/TablaCreditos";
 
-export default async function CreditosClientePage({ params }: { params: { idcliente: string } }) {
+interface Props {
+  params: Promise<{
+    idcliente: string;
+  }>;
+}
+
+export default async function CreditosClientePage({ params }: Props) {
   const { idcliente } = await params;
 
   return (

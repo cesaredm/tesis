@@ -4,7 +4,6 @@ import { Menu } from "primereact/menu";
 import { useRef } from "react";
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
 
 export function AvatarUser() {
   const menuRef = useRef<Menu>(null);
@@ -24,12 +23,14 @@ export function AvatarUser() {
     },
   ];
 
-  useEffect(()=>{console.log(data)},[])
-
   return (
     <div>
       <Avatar
-        label={data?.user?.usuario?.toUpperCase().slice(0,2) || "CE"}
+      
+        label={
+          //@ts-expect-error hola
+          data?.user?.usuario?.toUpperCase().slice(0,2) || "CE"
+        }
         //image="https://avatars.githubusercontent.com/u/54245599?v=4&size=64"
         onClick={(e) => menuRef.current?.toggle(e)}
         aria-controls="popup_menu_left"

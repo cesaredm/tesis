@@ -1,7 +1,7 @@
 import { conexiondb } from "@/db/dbconfig";
 import { respuestaError } from "@/utils/respuestas";
 
-export async function GET(request: Request) {
+export async function GET() {
     const conn = await conexiondb.getConnection();
     try {
        const [avales] = await conn.query("SELECT * FROM avalestienda"); 

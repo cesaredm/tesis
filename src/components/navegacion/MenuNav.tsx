@@ -3,11 +3,9 @@ import React, { useState } from "react";
 import { classNames } from "primereact/utils";
 import { Button } from "primereact/button";
 import SwitchTheme from "../SwitchTheme";
-import { usePathname } from "next/navigation";
 import { AvatarUser } from "./Avatar";
 import MenuMobile from "./MenuMobile";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { Avatar } from "primereact/avatar";
 import { Items } from "./Items";
 
 interface MenuNavProps {
@@ -16,7 +14,7 @@ interface MenuNavProps {
   children?: React.ReactNode;
 }
 
-export function MenuNav({ className, isStatic = false, children }: MenuNavProps) {
+export function MenuNav({ children }: MenuNavProps) {
   const [collapsed, setCollapsed] = useState(false);
   const { isMobile } = useIsMobile();
 

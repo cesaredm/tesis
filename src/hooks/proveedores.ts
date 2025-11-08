@@ -1,5 +1,5 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { Proveedor, ProveedorSave, ProveedorUpdate } from "@/domain/entities/Proveedores";
+import { ProveedorSave, ProveedorUpdate } from "@/domain/entities/Proveedores";
 import { ProveedoresRepositoryImpl } from "@/infra/repositories/ProveedoresRepositoryImpl";
 import { ProveedresRepository } from "@/domain/repositories/Proveedores.repository";
 import { ProveedoresUseCases } from "@/domain/usecases/ProveedoresUseCases";

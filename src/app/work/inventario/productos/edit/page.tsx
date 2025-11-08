@@ -1,7 +1,9 @@
 import { Form } from "@/components/inventario/productos/Form";
-
-export default async function EditPage({ searchParams }: { searchParams: { producto: string } }) {
-  const producto: { producto: string } = searchParams;
+interface Props {
+  searchParams: Promise<{ producto: string }>;
+}
+export default async function EditPage({ searchParams }: Props) {
+  const producto: { producto: string } = await searchParams;
 
   return (
     <div>

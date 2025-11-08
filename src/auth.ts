@@ -21,6 +21,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           }
           return null;
         } catch (error) {
+          console.log(error);
           return null;
         }
       },
@@ -40,7 +41,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
     session: async ({ session, token }) => {
-      //@ts-ignore
+      // @ts-expect-error hola
       session.user = token.user;
       return session;
     },

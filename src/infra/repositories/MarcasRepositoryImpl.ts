@@ -1,5 +1,6 @@
-import { axios, isAxiosError } from "@/utils/axiosConfig";
-import { Marca, MarcaSave, MarcaUpdate, RespuestaApi } from "@/types";
+import { axios} from "@/utils/axiosConfig";
+import { RespuestaApi } from "@/types";
+import { Marca, MarcaSave, MarcaUpdate} from "@/domain/entities/Marcas";
 import { MarcaRepository } from "@/domain/repositories/Marcas.repository";
 
 export class MarcaRepositoryImpl implements MarcaRepository {

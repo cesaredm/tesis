@@ -35,7 +35,7 @@ export function TablaProveedores() {
   const HeaderTable = (
     <div className="flex justify-between items-center flex-wrap gap-1">
       <div>
-        <Button size="small" label="Eliminar" severity="danger" icon="pi pi-trash" disabled={!seleccion} onClick={confirmarEliminacion} />
+        <Button size="small" label="Eliminar" severity="danger" icon="pi pi-trash" disabled={!seleccion} onClick={confirmarEliminacion} loading={isPending} />
       </div>
       <div>
         <IconField>

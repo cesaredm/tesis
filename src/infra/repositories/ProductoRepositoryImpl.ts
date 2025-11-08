@@ -1,4 +1,4 @@
-import { axios, isAxiosError } from "@/utils/axiosConfig";
+import { axios} from "@/utils/axiosConfig";
 import { Producto, ProductoSave, ProductoUpdate} from "@/domain/entities/Productos";
 import { RespuestaApi } from "@/types";
 import { ProductoRepository } from "../../domain/repositories/Productos.repository";

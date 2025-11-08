@@ -12,6 +12,7 @@ export async function POST(request: Request) {
     const movimiento = await request.json();
     const movimientoValidado = KardexSchema.parse({
       ...movimiento,
+    //@ts-expect-error holla
       empleado: sesion?.user?.empleado,
       fecha: format({ date: new Date(), format: "YYYY-MM-DD HH:mm:ss", tz: "America/Tegucigalpa" }),
     });

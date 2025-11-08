@@ -2,7 +2,6 @@
 import { useGetProductosQuery } from "@/hooks/productos";
 import { useFacturaStore } from "@/store/factura.store";
 import { Producto } from "@/domain/entities/Productos";
-import { DetalleSave } from "@/domain/entities/Facturas";
 import { FilterMatchMode } from "primereact/api";
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
@@ -110,7 +109,7 @@ export function Inventario() {
   return (
     <div>
       <Toast ref={toast} />
-      <DataTable showGridlines value={inventario} filters={filters} header={Header} rows={20} scrollable scrollHeight="80vh" globalFilterFields={["codigoBarra", "descripcion"]} paginator rowsPerPageOptions={[20, 50, 100, 200]} size="small">
+      <DataTable showGridlines value={inventario} filters={filters} header={Header} rows={20} scrollable scrollHeight="80vh" globalFilterFields={["codigoBarra", "descripcion"]} paginator rowsPerPageOptions={[20, 50, 100, 200]} size="small" loading={isLoading}>
         <Column body={AccionesTable} headerStyle={{ width: "3em" }} />
         <Column header="Descripcion" body={DescripcionTable} />
       </DataTable>

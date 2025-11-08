@@ -1,7 +1,7 @@
 "use client";
 import { useGetProductosQuery } from "@/hooks/productos";
 import { useFacturaStore } from "@/store/factura.store";
-import { DetalleSave, Factura } from "@/domain/entities/Facturas";
+import { DetalleSave} from "@/domain/entities/Facturas";
 import { Producto } from "@/domain/entities/Productos";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";

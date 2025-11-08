@@ -1,5 +1,4 @@
 "use client";
-
 import { useEliminarProductoMutation, useGetProductosQuery } from "@/hooks/productos";
 import { Producto } from "@/domain/entities/Productos";
 import { RespuestaApi } from "@/types";

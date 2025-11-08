@@ -18,6 +18,7 @@ export async function GET() {
       productos: (productos as any)[0][0].conteo,
     });
   } catch (error) {
+    console.log(error);
     return Response.json(respuestaError(), { status: 400 });
   }
 }

@@ -48,6 +48,7 @@ export class FacturaRepositoryImpl implements FacturaRepository {
     return axios.post("/facturacion", { factura, detalles }).then((res) => res.data);
   }
   actualizarFactura(factura: FacturaUpdate): Promise<RespuestaApi> {
+    console.log(factura);
     throw new Error("Method not implemented.");
   }
   async getFacturas(fecha: string | Date): Promise<Factura[]> {

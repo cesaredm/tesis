@@ -102,7 +102,7 @@ export function FormularioMarca({ marca }: { marca?: MarcaUpdate }) {
             </div>
 
             <div className="flex justify-end mt-2">
-              <Button label={marca ? "Actualizar" : "Guardar"} icon={isPending ? "pi pi-spin pi-spinner" : "pi pi-check"} size="small" disabled={isPending} />
+              <Button label={marca ? "Actualizar" : "Guardar"} icon={isPending ? "pi pi-spin pi-spinner" : "pi pi-check"} size="small" loading={isPending || isPendingUpdate} />
             </div>
           </div>
         </form>

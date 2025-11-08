@@ -19,6 +19,7 @@ export class UsuariosRepositoryImpl implements UsuarioRepository {
   }
 
   delete(id: number): Promise<RespuestaApi> {
+    console.log(id);
     throw new Error("Method not implemented.");
   }
 }

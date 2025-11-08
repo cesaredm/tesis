@@ -21,10 +21,6 @@ const productoSchema = z.object({
   marca: z.number({ required_error: "La marca es requerida", invalid_type_error: "La marca debe ser un número" }).positive({ message: "La marca debe ser un número positivo" }).int("La marca debe ser un número entero"),
 });
 
-const idSchema = z.object({
-  id: z.number(),
-});
-
 const productosUpdateSchema = productoSchema.extend({
   id: z.number(),
 });
@@ -44,7 +40,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const user = await auth();
-  // @ts-ignore
+    //@ts-expect-error holla
   const empleado = user?.user?.empleado;
   const conn = await conexiondb.getConnection();
   try {

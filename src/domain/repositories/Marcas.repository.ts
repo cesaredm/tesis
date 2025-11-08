@@ -1,4 +1,4 @@
-import { Marca, MarcaSave, MarcaUpdate } from "@/types";
+import { Marca, MarcaSave, MarcaUpdate } from "@/domain/entities/Marcas";
 import { RespuestaApi } from "@/types";
 export interface MarcaRepository {
   getMarcas(): Promise<Marca[]>;

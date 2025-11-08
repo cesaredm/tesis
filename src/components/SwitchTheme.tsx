@@ -1,7 +1,6 @@
 "use client";
-import { PrimeReactContext, PrimeReactProvider } from "primereact/api";
-import { Button } from "primereact/button";
-import { useEffect, useState, useContext } from "react";
+import { PrimeReactContext} from "primereact/api";
+import { useState, useContext } from "react";
 
 export default function SwitchTheme() {
   const { changeTheme } = useContext(PrimeReactContext);

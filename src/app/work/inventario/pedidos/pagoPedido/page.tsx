@@ -1,6 +1,10 @@
 import { FormPagoPedido } from "@/components/inventario/pedidos/FormPagoPedido";
 
-export default async function PageFormPagoCredito({ searchParams }: { searchParams: { pedido: number } }) {
+interface Props {
+  searchParams: Promise<{ pedido: number }>;
+}
+
+export default async function PageFormPagoCredito({ searchParams }: Props) {
   const pedido: { pedido: number } = await searchParams;
   return <div>
     <div className={'w-full md:w-1/2 mx-auto'}>

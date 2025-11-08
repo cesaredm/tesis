@@ -43,7 +43,7 @@ export async function PATCH(req: Request) {
   try {
     const data = await req.json();
     const clienteValido = PersonaSchemaUpdate.parse(data);
-    const [result] = await conn.query<ResultSetHeader>("UPDATE persona SET nombres = ?, apellidos = ?, dni = ?, direccion = ?, departamento = ?, municipio = ?, barrio = ?, lugarTrabajo = ?, telefono = ?, foto = ? WHERE id = ?", [
+    await conn.query<ResultSetHeader>("UPDATE persona SET nombres = ?, apellidos = ?, dni = ?, direccion = ?, departamento = ?, municipio = ?, barrio = ?, lugarTrabajo = ?, telefono = ?, foto = ? WHERE id = ?", [
       clienteValido.nombres,
       clienteValido.apellidos,
       clienteValido.dni,

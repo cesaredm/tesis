@@ -52,7 +52,7 @@ export function Pedido() {
     return (
       <div className="flex gap-1">
         <Button icon="pi pi-plus" onClick={(e) => agregarMasProducto(e, row)} />
-        <Button icon="pi pi-minus" onClick={(e) => bajarCantidad(row)} />
+        <Button icon="pi pi-minus" onClick={() => bajarCantidad(row)} />
       </div>
     );
   }
@@ -120,7 +120,7 @@ export function Pedido() {
   }
 
   function onChangePedido(e: DropdownChangeEvent) {
-    // @ts-ignore
+    //@ts-expect-error para no tener problemas de tipo aqui
     setPedido({ ...pedido, [e.target.name]: e.value });
   }
 

@@ -17,7 +17,7 @@ import { usePedidosStore } from "@/store/pedidos.store";
 
 export function Productos() {
   const { data, isLoading } = useGetProductosQuery();
-  const { clear, detalles, pedido, setPedido, setReload, reload } = usePedidosStore((state) => state);
+  const {detalles,setReload, reload } = usePedidosStore((state) => state);
   const [visible, setVisible] = useState(false);
   const [producto, setProducto] = useState<Producto>();
   const [filters, setFilters] = useState<DataTableFilterMeta>({

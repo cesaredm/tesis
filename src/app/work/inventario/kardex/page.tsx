@@ -4,6 +4,10 @@ import { TablaKardex } from "@/components/inventario/kardex/TablaKardex";
 import { Kardex } from "@/domain/entities/Kardex";
 import { Spinner2 } from "@/components/shared/Spinner2";
 
+interface Props{
+  searchParams: Promise<{id: string, n: string}>
+}
+
 async function getKardex(id: string) {
   "use server";
   const conn = await conexiondb.getConnection();
@@ -18,7 +22,7 @@ async function getKardex(id: string) {
   }
 }
 
-export default async function({ searchParams }: { searchParams: { id: string, n: string } }) {
+export default async function KardexPage({ searchParams }: Props) {
   const {id, n} = await searchParams;
   const mov = await getKardex(id);
 
