@@ -2,8 +2,9 @@ export interface Usuario {
   id: number;
   usuario: string;
   password: string;
-  idempleado: number;
-  empleado: string;
+  nombres: string;
+  apellidos: string;
+  empleado: number;
   permiso: string;
 }
 

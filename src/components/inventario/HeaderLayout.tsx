@@ -30,7 +30,7 @@ export function HeaderLayout() {
 
   return (
     <div>
-      <header className="flex justify-between border-b border-surface-border p-2 mb-2 gap-2 items-center">
+      <header className="flex justify-between border-b border-surface-border p-2 mb-2 gap-2 items-center flex-wrap">
         <h1 className="text-2xl font-semibold">{apartado[pathname as keyof typeof apartado] || "Inventario"}</h1>
         <article className="flex gap-1 w-full lg:w-auto overflow-auto">
           <Link href={"/work/inventario"}>

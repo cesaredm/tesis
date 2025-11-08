@@ -3,33 +3,33 @@ import { InputText } from "primereact/inputtext";
 import { BoxForm } from "../shared/BoxForm";
 import { HeaderForm } from "../shared/HeaderForm";
 import { useForm } from "react-hook-form";
-import { Cliente, ClienteSave } from "@/domain/entities/Clientes";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Button } from "primereact/button";
-import { useActualizarClienteMutation, useGuardarClienteMutation } from "@/hooks/clientes";
+import { useEditarEmpleadoMutation, useGuardarEmpleadoMutation } from "@/hooks/useEmpleados";
 import { useEffect, useRef, useState } from "react";
 import { toastError, toastSuccess } from "@/utils/formatToast";
 import { Toast } from "primereact/toast";
 import { useRouter } from "next/navigation";
+import { Empleado, EmpleadoSave, EmpleadoUpdate } from "@/domain/entities/Empleado";
 
-export function CrearCliente({ cliente }: { cliente?: Cliente }) {
+export function CrearEmpleado({ empleado }: { empleado?: Empleado }) {
   const {
     register,
     formState: { errors },
     handleSubmit,
     reset,
     setValue,
-  } = useForm<ClienteSave | Cliente>();
+  } = useForm<EmpleadoSave | EmpleadoUpdate>();
   const router = useRouter();
-  const { mutate: guardar, isPending: isPendingGuardar, isSuccess: isSuccessGuardar, isError: isErrorGuardar, error: errorGuardar, data: dataGuardar } = useGuardarClienteMutation();
-  const { mutate: actualizarCliente, isPending: isPendingActualizar, isSuccess: isSuccessActualizar, isError: isErrorActualizar, data: dataActualizar, error: errorActualizar } = useActualizarClienteMutation();
+  const { mutate: guardar, isPending: isPendingGuardar, isSuccess: isSuccessGuardar, isError: isErrorGuardar, error: errorGuardar, data: dataGuardar } = useGuardarEmpleadoMutation();
+  const { mutate: actualizarEmpleado, isPending: isPendingActualizar, isSuccess: isSuccessActualizar, isError: isErrorActualizar, data: dataActualizar, error: errorActualizar } = useEditarEmpleadoMutation();
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
 
   const toast = useRef<Toast>(null);
 
-  const onSubmit = (data: ClienteSave | Cliente) => {
-    if (isEditMode && cliente) {
-      actualizarCliente(data as Cliente);
+  const onSubmit = (data: EmpleadoSave | EmpleadoUpdate) => {
+    if (isEditMode && empleado) {
+      actualizarEmpleado(data as EmpleadoUpdate);
     } else {
       guardar(data);
     }
@@ -50,7 +50,7 @@ export function CrearCliente({ cliente }: { cliente?: Cliente }) {
     if (isSuccessActualizar) {
       toast.current?.show(toastSuccess(dataActualizar));
       reset();
-      router.push("/work/clientes/crear"); 
+      router.push("/work/empleados/crear");
     }
 
     if (isErrorActualizar) {
@@ -59,25 +59,25 @@ export function CrearCliente({ cliente }: { cliente?: Cliente }) {
   }, [isSuccessActualizar, isErrorActualizar]);
 
   useEffect(() => {
-    if (cliente) {
+    if (empleado) {
       setIsEditMode(true);
-      setValue("id", cliente.id);
-      setValue("nombres", cliente.nombres);
-      setValue("apellidos", cliente.apellidos);
-      setValue("dni", cliente.dni);
-      setValue("direccion", cliente.direccion);
-      setValue("departamento", cliente.departamento);
-      setValue("municipio", cliente.municipio);
-      setValue("barrio", cliente.barrio);
-      setValue("lugarTrabajo", cliente.lugarTrabajo);
-      setValue("telefono", cliente.telefono);
+      setValue("id", empleado.id);
+      setValue("nombres", empleado.nombres);
+      setValue("apellidos", empleado.apellidos);
+      setValue("dni", empleado.dni);
+      setValue("direccion", empleado.direccion);
+      setValue("departamento", empleado.departamento);
+      setValue("municipio", empleado.municipio);
+      setValue("barrio", empleado.barrio);
+      setValue("lugarTrabajo", empleado.lugarTrabajo);
+      setValue("telefono", empleado.telefono);
     }
-  }, [cliente]);
+  }, [empleado]);
 
   return (
     <section className="w-full lg:w-4/5 mx-auto">
       <Toast ref={toast} />
-      <HeaderForm title={isEditMode ? "Editar Cliente" : "Crear Cliente"} description={isEditMode ? "Edita datos de cliente" : "Agregue la información del cliente"} />
+      <HeaderForm title={isEditMode ? "Editar Colaborador" : "Crear Colaborador"} description={isEditMode ? "Edita datos de colaborador" : "Agregue la información del colaborador"} />
       <form action="" onSubmit={handleSubmit(onSubmit)}>
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-1">
           <BoxForm>
@@ -127,7 +127,7 @@ export function CrearCliente({ cliente }: { cliente?: Cliente }) {
           </BoxForm>
         </section>
         <footer className="mt-2 flex justify-end gap-2">
-          <Button label="Cancelar" size="small" icon="pi pi-times" text type="button" onClick={() => {reset(); router.push("/work/clientes/crear");}} />
+          <Button label="Cancelar" size="small" icon="pi pi-times" text type="button" onClick={() => {reset(); router.push("/work/empleados/crear")}} />
           <Button label={isEditMode ? "Actualizar" : "Guardar"} size="small" icon="pi pi-check" type="submit" loading={isPendingGuardar || isPendingActualizar} />
         </footer>
       </form>

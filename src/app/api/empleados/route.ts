@@ -7,7 +7,7 @@ import { ZodError } from "zod";
 export async function GET() {
   const conn = await conexiondb.getConnection();
   try {
-    const [clientes] = await conn.query("SELECT * FROM empleados");
+    const [clientes] = await conn.query("SELECT * FROM empleadostienda");
     return Response.json(clientes);
   } catch (error) {
     console.log(error);
@@ -21,11 +21,11 @@ export async function POST(req: Request) {
   const conn = await conexiondb.getConnection();
   try {
     const data = await req.json();
-    const clienteValido = PersonaSchema.parse(data);
+    const empleadoValido = PersonaSchema.parse(data);
     await conn.beginTransaction();
-    const [result] = await conn.query<ResultSetHeader>("INSERT INTO persona SET ?", [clienteValido]);
+    const [result] = await conn.query<ResultSetHeader>("INSERT INTO persona SET ?", [empleadoValido]);
     const persona = result.insertId;
-    await conn.query("INSERT INTO empleado SET ?", [{ persona }]);
+    await conn.query("INSERT INTO empleados SET ?", [{ persona }]);
     await conn.commit();
     return Response.json(respuesta(), { status: 201 });
   } catch (error) {

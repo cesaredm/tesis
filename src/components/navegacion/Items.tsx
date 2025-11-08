@@ -11,11 +11,12 @@ const menuItems = [
     icon: "pi pi-shopping-cart",
     href: "/work/facturacion",
   },
+  { label: "Reportes", icon: "pi pi-chart-bar", href: "/work/reportes" },
   { label: "inventario", icon: "pi pi-box", href: "/work/inventario" },
   { label: "Clientes", icon: "pi pi-users", href: "/work/clientes" },
   { label: "Empleados", icon: "pi pi-users", href: "/work/empleados" },
-  { label: "Reportes", icon: "pi pi-chart-bar", href: "/work/reportes" },
-  { label: "Configuración", icon: "pi pi-cog", href: "/work/configuracion" },
+  { label: "Usuarios", icon: "pi pi-user", href: "/work/usuarios" },
+  //{ label: "Configuración", icon: "pi pi-cog", href: "/work/configuracion" },
 ];
 export function Items({ collapsed }: { collapsed: boolean }) {
   const pathname = usePathname();
