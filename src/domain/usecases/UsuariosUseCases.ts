@@ -15,4 +15,8 @@ export class UsuariosUseCases {
   update(usuario: UsuarioUpdate) {
     return this.usuariosRepository.update(usuario);
   }
+
+  delete(id: number) {
+    return this.usuariosRepository.delete(id);
+  }
 }

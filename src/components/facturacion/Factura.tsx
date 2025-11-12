@@ -25,6 +25,7 @@ import { toastError, toastSuccess } from "@/utils/formatToast";
 import { Panel } from "primereact/panel";
 import { Card } from "primereact/card";
 import { BoxForm } from "../shared/BoxForm";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 export function TablaFactura() {
   const { detalles, setReloadView, reloadView, factura, setCampoFactura, limpiarTodo } = useFacturaStore((state) => state);
@@ -33,6 +34,7 @@ export function TablaFactura() {
   const { data: avales, isLoading: isLoadingAvales } = useGetAvalesQuery();
   const [seleccion, setSeleccion] = useState<DetalleSave[]>([]);
   const [print, setPrint] = useState(false);
+  const {isMobile} = useIsMobile()
   const toast = useRef<Toast>(null);
   const opAdd = useRef<OverlayPanel>(null);
   const opDescuento = useRef<OverlayPanel>(null);
@@ -162,13 +164,13 @@ export function TablaFactura() {
     const descuento = row.precioOriginal - row.precio;
     return (
       <div>
-        <div className="flex justify-between">
-          <span className="text-xl font-semibold">
+        <div className="flex-col md:flex-row md:justify-between gap-1">
+          <div className="text-xl font-semibold">
             {row.descripcion} {row.marca}
-          </span>
-          <span className="text-xl">
+          </div>
+          <div className="text-xl">
             {row.cantidad} x {formatDecimal(row.precio)} = {formatDecimal(importe)}
-          </span>
+          </div>
         </div>
         {descuento > 0 && (
           <div className="text-green-400 tex">
@@ -180,8 +182,8 @@ export function TablaFactura() {
   }
 
   const Header = (
-    <div className="flex flex-col gap-2">
-      <div className="flex items-center gap-1">
+    <div className="flex flex-col gap-2 flex-wrap">
+      <div className="flex items-center gap-1 flex-wrap">
         <form action="" onSubmit={onSubmitCodigoBarra}>
           <IconField>
             <InputIcon className="pi pi-barcode" />
@@ -190,7 +192,7 @@ export function TablaFactura() {
         </form>
 
         <ButtonGroup>
-          <Button label="Eliminar art." size="small" severity="warning" icon="pi pi-eraser" onClick={eliminarArticulos} />
+          <Button label={isMobile ? "" : "Eliminar art."} size="small" severity="warning" icon="pi pi-eraser" onClick={eliminarArticulos} />
           <SidebarInventario />
           <Button label="Cobrar" size="small" icon="pi pi-money-bill" disabled={detalles.size == 0} onClick={() => guardar(false)} loading={isPending} />
           <Button label="Imprimir" size="small" icon="pi pi-print" disabled={detalles.size == 0} onClick={() => guardar(true)} loading={isPending} />
@@ -299,7 +301,7 @@ export function TablaFactura() {
         </form>
       </OverlayPanel>
       <Card>
-        <Panel header="Datos de generales" className="mb-2">
+        <Panel header="Datos de generales" className="mb-2" toggleable collapsed={true}>
           <DatosCredito />
         </Panel>
         <DataTable value={Array.from(detalles.values())} selectionMode={"multiple"} header={Header} footer={FooterTable} selection={seleccion} onSelectionChange={({ value }) => setSeleccion(value)} emptyMessage="Factura vacia." showGridlines>

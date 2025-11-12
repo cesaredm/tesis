@@ -40,3 +40,16 @@ export function useActualizarUsuarioMutation() {
 
   return { ...mutation };
 }
+
+export function useEliminarUsuarioMutation() {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (id: number) => usuariosUseCases.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["usuarios"] });
+    },
+  });
+
+  return { ...mutation };
+}

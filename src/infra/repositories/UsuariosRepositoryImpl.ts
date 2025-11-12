@@ -18,8 +18,9 @@ export class UsuariosRepositoryImpl implements UsuarioRepository {
     return data;
   }
 
-  delete(id: number): Promise<RespuestaApi> {
+  async delete(id: number): Promise<RespuestaApi> {
     console.log(id);
-    throw new Error("Method not implemented.");
+    const { data } = await axios.delete("/usuarios/gestion", { data: { id } });
+    return data;
   }
 }
