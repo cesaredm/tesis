@@ -1,10 +1,11 @@
 import { createPool } from "mysql2/promise";
+const { MYSQLHOST, MYSQLUSER, MYSQLPASSWORD, MYSQL_DATABASE } = process.env;
 // Create the connection pool. The pool-specific settings are the defaults
 const conexiondb = createPool({
-  host: "localhost",
-  user: "root",
-  password:'19199697tsoCD',
-  database: "tiendamegahogar",
+  host: MYSQLHOST,
+  user: MYSQLUSER,
+  password: MYSQLPASSWORD,
+  database: MYSQL_DATABASE,
   waitForConnections: true,
   connectionLimit: 150,
   maxIdle: 150, // max idle connections, the default value is the same as `connectionLimit`
@@ -15,4 +16,3 @@ const conexiondb = createPool({
 });
 
 export { conexiondb };
-
