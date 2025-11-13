@@ -37,8 +37,13 @@ export function TablaPedidos() {
   function AccionesTemplate(row: Pedido) {
     return (
       <div>
-        <Link href={"/work/inventario/pedidos/pagoPedido?pedido=" + row.id}>
-          <Button icon={"pi pi-money-bill"} size={"small"} severity={"success"} text />
+        {row.estado == "Pendiente" && (
+          <Link href={"/work/inventario/pedidos/pagoPedido?pedido=" + row.id}>
+            <Button icon={"pi pi-money-bill"} size={"small"} severity={"success"} text />
+          </Link>
+        )}
+        <Link href={"/work/inventario/pedidos/pagoPedido/" + row.id}>
+          <Button icon={"pi pi-list"} size={"small"} severity={"success"} text />
         </Link>
       </div>
     );
@@ -97,7 +102,7 @@ export function TablaPedidos() {
         emptyMessage={isLoading ? <Spinner /> : "No hay pedidos"}
       >
         <Column expander={true} headerStyle={{ width: "3rem" }} />
-        <Column body={AccionesTemplate} headerStyle={{ width: "3rem" }} />
+        <Column body={AccionesTemplate} headerStyle={{ width: "7.5rem", minWidth: "7.5rem" }} />
         <Column header={"# Pedido"} field={"id"} sortable />
         <Column header={"Fecha"} field={"f"} sortable />
         <Column header={"Proveedor"} field={"nombreProveedor"} sortable />

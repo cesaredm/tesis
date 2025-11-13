@@ -6,6 +6,7 @@ import { toastSuccess } from "@/utils/formatToast";
 import Link from "next/link";
 import { Button } from "primereact/button";
 import { Column } from "primereact/column";
+import { ConfirmPopup, confirmPopup } from "primereact/confirmpopup";
 import { DataTable } from "primereact/datatable";
 import { Toast } from "primereact/toast";
 import { useEffect, useRef } from "react";
@@ -23,13 +24,25 @@ export function TablaUsuarios() {
     );
   }
 
+  function eliminar(e: React.MouseEvent<HTMLButtonElement>, id: number) {
+    confirmPopup({
+      target: e.currentTarget,
+      message: "¿Seguro que quiere eliminar este usuario?",
+      icon: "pi pi-exclamation-triangle",
+      acceptClassName: "p-button-danger",
+      acceptLabel: "Si",
+      rejectLabel: "No",
+      accept: () => EliminarUsuario(id),
+    });
+  }
+
   function AccionesTemplate(row: Usuario) {
     return (
       <div className="flex gap-1">
         <Link href={`/work/usuarios/edit/${row.id}`}>
           <Button size="small" text icon="pi pi-pencil" severity="success" />
         </Link>
-        <Button size="small" severity="danger" text icon="pi pi-trash" onClick={() => EliminarUsuario(row.id)} loading={isPending} />
+        <Button size="small" severity="danger" text icon="pi pi-trash" onClick={(e) => eliminar(e, row.id)} loading={isPending} />
       </div>
     );
   }
@@ -46,6 +59,7 @@ export function TablaUsuarios() {
 
   return (
     <div>
+      <ConfirmPopup />
       <Toast ref={toast} />
       <DataTable value={usuarios} loading={isLoading} paginator rows={10} dataKey={"id"} showGridlines size="small" rowsPerPageOptions={[10, 50, 100, 500]}>
         <Column body={AccionesTemplate} headerStyle={{ width: "7rem" }} />

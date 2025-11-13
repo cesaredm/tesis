@@ -30,7 +30,12 @@ export class PedidosRepositoryImpl implements PedidosRepository {
   }
 
   async getPagoPedido(pedido: number): Promise<PagoPedido[]> {
-    const { data } = await axios.get(`/inventario/pedidos/pagos/${pedido}`);
+    const { data } = await axios.get(`/inventario/pedidos/pagos`, { params: { pedido } });
+    return data;
+  }
+
+  async eliminarPago(pago: number): Promise<RespuestaApi> {
+    const { data } = await axios.delete(`/inventario/pedidos/pagos`, { params: { id: pago } });
     return data;
   }
 }

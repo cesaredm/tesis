@@ -50,6 +50,5 @@ export interface PagoPedido {
   pedido: number;
   monto: number;
   fecha: string | Date;
-  estado: string;
 }
 

@@ -60,3 +60,28 @@ export function useGuardarPagoPedidoMutation() {
     ...mutation,
   };
 }
+
+export function useGetPagosPedido(pedido: number){
+  const pagos = useQuery({
+    queryKey: ["pagosPedidos"],
+    queryFn: () => pedidosUseCases.getPagoPedido(pedido),
+  });
+
+  return pagos;
+}
+
+export function useEliminarPagoPedidoMutation() {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (id: number) => pedidosUseCases.eliminarPago(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pedidos"] });
+      queryClient.invalidateQueries({ queryKey: ["pagosPedidos"] });
+    },
+  });
+
+  return {
+    ...mutation,
+  };
+}

@@ -84,7 +84,7 @@ export function DialogPago({ credito }: Props) {
               render={({ field }) => (
                 <BoxForm>
                   <label htmlFor="">Monto</label>
-                  <InputNumber value={field.value} onChange={({ value }) => field.onChange(value)} mode="currency" currency="HND" locale="es-NI" maxFractionDigits={2} minFractionDigits={2} onFocus={(e)=>e.target.select()} autoFocus />
+                  <InputNumber value={field.value} onChange={({ value }) => field.onChange(value)} mode="currency" currency="HNL" locale="es-HN" maxFractionDigits={2} minFractionDigits={2} onFocus={(e)=>e.target.select()} autoFocus />
                   {errors.monto && <p className="text-red-500">{errors.monto.message}</p>}
                 </BoxForm>
               )}

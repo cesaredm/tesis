@@ -19,4 +19,8 @@ export class PedidosUseCases {
   async getPagoPedido(pedido: number): Promise<PagoPedido[]> {
     return this.pedidosRepository.getPagoPedido(pedido);
   }
+
+  async eliminarPago(pago: number): Promise<RespuestaApi> {
+    return this.pedidosRepository.eliminarPago(pago);
+  }
 }

@@ -17,7 +17,7 @@ import { usePedidosStore } from "@/store/pedidos.store";
 
 export function Productos() {
   const { data, isLoading } = useGetProductosQuery();
-  const {detalles,setReload, reload } = usePedidosStore((state) => state);
+  const { detalles, setReload, reload } = usePedidosStore((state) => state);
   const [visible, setVisible] = useState(false);
   const [producto, setProducto] = useState<Producto>();
   const [filters, setFilters] = useState<DataTableFilterMeta>({
@@ -95,7 +95,7 @@ export function Productos() {
           detalles.set(producto.id, detalle);
         }
 
-        setReload(reload+1);
+        setReload(reload + 1);
         op.current?.hide();
         return;
       }
@@ -139,7 +139,7 @@ export function Productos() {
         <OverlayPanel ref={op}>
           <form onSubmit={onSubmit}>
             <div className="p-inputgroup flex-1">
-              <InputText keyfilter={"pnum"} name="cantidad" required autoFocus />
+              <InputText keyfilter={"pnum"} name="cantidad" required autoFocus inputMode="numeric" />
               <Button type="submit" icon="pi pi-check" />
             </div>
           </form>

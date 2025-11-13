@@ -116,7 +116,7 @@ export function Inventario() {
       <OverlayPanel ref={op}>
         <form action="" onSubmit={onSubmitAgregarProducto}>
           <div className="p-inputgroup">
-            <InputText keyfilter={"int"} name="cantidad" autoFocus />
+            <InputText keyfilter={"int"} name="cantidad" autoFocus inputMode="numeric" />
             <Button icon="pi pi-plus" />
           </div>
         </form>

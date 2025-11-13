@@ -6,4 +6,5 @@ export interface PedidosRepository {
   actualizarPedido(pedido: PedidoUpdate): Promise<RespuestaApi>;
   pagarPedido(pago: PagoPedidoSave): Promise<RespuestaApi>;
   getPagoPedido(pedido: number): Promise<PagoPedido[]>;
+  eliminarPago(pago: number): Promise<RespuestaApi>;
 }

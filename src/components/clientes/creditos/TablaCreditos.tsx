@@ -46,6 +46,11 @@ export function TablaCreditos({ cliente }: { cliente: number }) {
     )
   }
 
+  function SaldoTemplate(row: Credito) {
+    const saldo = Number(row.total) - Number(row.pagos);
+    return <div className="text-end">{formatDecimal(saldo)}</div>;
+  }
+
   return (
     <div>
       <HeaderForm title="Creditos" description="Lista de creditos" />
@@ -72,6 +77,7 @@ export function TablaCreditos({ cliente }: { cliente: number }) {
         <Column header="Aval" field="aval" />
         <Column header="Monto" field="total" body={MontoTemplate} />
         <Column header="Pagos" field="pagos" body={PagosTemplate} />
+        <Column header="Saldo" field="saldo" body={SaldoTemplate} />
         <Column header="# Factura" field="numeroFactura" />
         <Column header="# Credito" field="numeroCredito" />
         <Column header="Estado" field="estado" body={EstadoTemplate} />
