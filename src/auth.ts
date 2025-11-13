@@ -2,6 +2,8 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import axios from "axios";
 
+const { NEXTAUTH_URL } = process.env;
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
@@ -11,7 +13,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials): Promise<any> {
         try {
-          const { data } = await axios.post("http://localhost:3000/api/usuarios", {
+          const { data } = await axios.post(`${NEXTAUTH_URL}/api/usuarios`, {
             usuario: credentials?.usuario,
             password: credentials?.password,
           });

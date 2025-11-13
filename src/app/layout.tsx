@@ -29,15 +29,9 @@ export default function RootLayout({
   return (
     <html lang="es">
       <head>
-        <link
-          id="theme-link"
-          rel="stylesheet"
-          href="/themes/lara-dark-indigo/theme.css"
-        />
+        <link id="theme-link" rel="stylesheet" href="/themes/lara-dark-indigo/theme.css" />
       </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`antialiased`}>
         <PrimeProvider>
           <div className="bg-surface-ground">{children}</div>
         </PrimeProvider>
