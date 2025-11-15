@@ -14,6 +14,7 @@ const menuItems = [
   { label: "Reportes", icon: "pi pi-chart-bar", href: "/work/reportes" },
   { label: "inventario", icon: "pi pi-box", href: "/work/inventario" },
   { label: "Clientes", icon: "pi pi-users", href: "/work/clientes" },
+  { label: "transacciones", icon: "pi pi-money-bill", href: "/work/transacciones" },
   { label: "Empleados", icon: "pi pi-users", href: "/work/empleados" },
   { label: "Usuarios", icon: "pi pi-user", href: "/work/usuarios" },
   //{ label: "Configuración", icon: "pi pi-cog", href: "/work/configuracion" },

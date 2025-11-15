@@ -46,35 +46,38 @@ export default function Home() {
   return (
     <div className="flex items-center justify-center min-h-[100vh]">
       <Toast ref={toast} />
-      <section className="bg-surface-card shadow w-[95vw] md:w-1/2 lg:w-1/5 border border-surface-border p-3 rounded-xl">
-        <header className="text-2xl text-center">
-          <h4>Tienda Mega Hogar</h4>
-          <small className="text-primary">Inicio de sesion</small>
-        </header>
-        <Divider />
-        <section>
-          <form action="" onSubmit={handleSignIn}>
-            <div className="grid grid-cols-1 gap-2">
-              <IconField>
-                <InputIcon className="pi pi-user" />
-                <InputText className="w-full" name="usuario" onChange={onChangeCredenciales}  />
-              </IconField>
-              <IconField>
-                <InputIcon className="pi pi-lock z-10" />
-                <Password
-                  className="w-full"
-                  toggleMask={false}
-                  feedback={false}
-                  name="password"
-                  onChange={onChangeCredenciales}
-                  pt={{
-                    input: { className: "w-full" },
-                  }}
-                />
-              </IconField>
-              <Button label="Acceder" icon={lazy ? "pi pi-spin pi-spinner" : "pi pi-lock-open"} className="w-full" disabled={lazy} />
-            </div>
-          </form>
+      <section className="w-[95vw] md:w-1/2 lg:w-1/5">
+        <section className="bg-surface-card shadow border-3 border-surface-border p-3 rounded-xl">
+          <header className="text-2xl text-center">
+            {/*<h4>Tienda Mega Hogar</h4>*/}
+            <img src="/logo.ico" alt="" className="mx-auto rounded-xl m-2 w-1/3 border-4 border-surface-border shadow-lg mt-[-12%]" />
+            <small className="text-primary">Inicio de sesión</small>
+          </header>
+          <Divider />
+          <section>
+            <form action="" onSubmit={handleSignIn}>
+              <div className="grid grid-cols-1 gap-2">
+                <IconField>
+                  <InputIcon className="pi pi-user" />
+                  <InputText className="w-full" name="usuario" onChange={onChangeCredenciales} />
+                </IconField>
+                <IconField>
+                  <InputIcon className="pi pi-lock z-10" />
+                  <Password
+                    className="w-full"
+                    toggleMask={false}
+                    feedback={false}
+                    name="password"
+                    onChange={onChangeCredenciales}
+                    pt={{
+                      input: { className: "w-full" },
+                    }}
+                  />
+                </IconField>
+                <Button label="Acceder" icon={lazy ? "pi pi-spin pi-spinner" : "pi pi-lock-open"} className="w-full" disabled={lazy} />
+              </div>
+            </form>
+          </section>
         </section>
       </section>
     </div>
