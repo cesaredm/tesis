@@ -19,18 +19,20 @@ export async function POST(request: Request) {
     const factura = body.factura;
     await conn.beginTransaction();
 
+    const fecha = format({ date: new Date(), format: "YYYY-MM-DD HH:mm:ss", tz: "America/Tegucigalpa" });
+
     if (factura.cliente && factura.cliente !== null) {
       const creditoValido = CreditoSchema.parse({
         cliente: factura.cliente,
         aval: factura.aval,
-        fecha: format({ date: new Date(), format: "YYYY-MM-DD HH:mm:ss", tz: "America/Tegucigalpa" }),
+        fecha,
       });
 
       const [resultCredito] = await conn.query<ResultSetHeader>("INSERT INTO creditos SET ?", [creditoValido]);
       factura.credito = resultCredito.insertId;
     }
 
-    const facturaValidada = FacturaSchema.parse({ ...factura, empleado, fecha: format({ date: new Date(), format: "YYYY-MM-DD HH:mm:ss", tz: "America/Tegucigalpa" }) });
+    const facturaValidada = FacturaSchema.parse({ ...factura, empleado, fecha });
 
     const [resFactura] = await conn.query<ResultSetHeader>("INSERT INTO facturas SET ?", [{ ...facturaValidada }]);
 
@@ -50,7 +52,15 @@ export async function POST(request: Request) {
     }
 
     await conn.commit();
-    return Response.json(respuesta(), { status: 201 });
+    return Response.json(
+      {
+        ...respuesta(),
+        fecha,
+        numeroCorrelativo: resFactura.insertId,
+        empleado,
+      },
+      { status: 201 }
+    );
   } catch (error) {
     await conn.rollback();
     console.log(error);

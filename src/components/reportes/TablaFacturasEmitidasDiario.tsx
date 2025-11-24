@@ -7,16 +7,20 @@ import { Nullable } from "primereact/ts-helpers";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { getFacturas } from "@/servicios/facturas.services";
-import { Factura } from "@/domain/entities/Facturas";
+import { Detalle, Factura } from "@/domain/entities/Facturas";
 import { Toast } from "primereact/toast";
 import { toastError } from "@/utils/formatToast";
 import { formatDecimal } from "@/utils/helpers";
+import TicketFactura from "../tickets/TicketFactura";
+import { useFacturaStore } from "@/store/factura.store";
 
 export function FacturasEmitidasDiario() {
+  const { detalles, setAval, setCliente, setCampoFactura, setRespuestaFactura, setTotales } = useFacturaStore((state) => state);
   const [fecha, setFecha] = useState<Nullable<Date>>(new Date());
   const [facturas, setFacturas] = useState<Factura[]>([]);
   const [loading, setLoading] = useState(false);
   const [expandedRows, setExpandedRows] = useState<DataTableExpandedRows | DataTableValueArray | undefined>(undefined);
+  const ticketRef = useRef<HTMLDivElement>(null);
   const toast = useRef<Toast>(null);
 
   async function getFacturasPorFecha() {
@@ -31,6 +35,57 @@ export function FacturasEmitidasDiario() {
     }
 
     setLoading(false);
+  }
+
+  function calcularTotales(detalles: Detalle[]) {
+    return detalles.reduce(
+      (totales, item) => {
+        totales.total += Number(item.importe);
+        totales.descuento += Number(item.precioVenta) - Number(item.precio);
+        totales.subtotal += Number(item.precioVenta);
+        return { ...totales };
+      },
+      { subtotal: 0, descuento: 0, total: 0 }
+    );
+  }
+
+  function reImprimir(factura: Factura) {
+    setCliente(factura.clientefullname || "");
+    setAval(factura.avalfullname || "");
+    setCampoFactura("comprador", factura.comprador);
+    setCampoFactura("cliente", factura.clienteid);
+    setCampoFactura("aval", factura.avalid);
+    const totales = calcularTotales(factura.detalles);
+    console.log(totales);
+    setTotales(totales);
+    setRespuestaFactura({
+      numeroCorrelativo: Number(factura.id),
+      empleado: Number(factura.empleadoid),
+      fecha: factura.fecha,
+    });
+
+    factura.detalles.map((d: Detalle) => {
+      detalles.set(d.producto, {
+        cantidad: d.cantidad,
+        // @ts-expect-error hola
+        codigoBarra: d.codigoBarra,
+        descripcion: d.descripcion,
+        id: d.producto,
+        idmarca: 1,
+        importe: d.importe,
+        marca: "",
+        modelo: "",
+        precio: d.precio,
+        precioOriginal: d.precioVenta,
+        precioCosto: 0,
+        precioVenta: d.precioVenta,
+        producto: d.producto,
+        stock: 0,
+      });
+    });
+
+    // @ts-expect-error para imprimir
+    ticketRef.current?.print();
   }
 
   const Header = (
@@ -53,6 +108,9 @@ export function FacturasEmitidasDiario() {
       </div>
     );
   }
+  function AccionesTemplate(row: Factura) {
+    return <Button icon="pi pi-print" size="small" text onClick={() => reImprimir(row)} />;
+  }
 
   function ExpandedRowsTemplate(data: Factura) {
     return (
@@ -70,8 +128,27 @@ export function FacturasEmitidasDiario() {
 
   return (
     <div>
-      <DataTable value={facturas} header={Header} dataKey={"id"} loading={loading} expandedRows={expandedRows} onRowToggle={(e) => setExpandedRows(e.data)} rowExpansionTemplate={ExpandedRowsTemplate} size="small" showGridlines stripedRows rowHover rows={7} rowsPerPageOptions={[7,20,50,100,500]} paginator>
+      <TicketFactura ref={ticketRef} />
+      <DataTable
+        value={facturas}
+        header={Header}
+        dataKey={"id"}
+        loading={loading}
+        expandedRows={expandedRows}
+        onRowToggle={(e) => setExpandedRows(e.data)}
+        rowExpansionTemplate={ExpandedRowsTemplate}
+        size="small"
+        showGridlines
+        stripedRows
+        rowHover
+        rows={7}
+        rowsPerPageOptions={[7, 20, 50, 100, 500]}
+        paginator
+        scrollable
+        scrollHeight="60vh"
+      >
         <Column expander headerStyle={{ width: "3rem" }} />
+        <Column body={AccionesTemplate} />
         <Column field={"id"} header={"# Factura"} />
         <Column field={"f"} header={"Fecha"} />
         <Column field={"total"} body={TotalTemplate} header={"total"} />

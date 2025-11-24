@@ -11,6 +11,7 @@ export interface Cliente {
   lugarTrabajo: string;
   telefono: string;
   foto?: string;
+  nombreCompleto: string;
 }
 
 export interface ClienteSave {
@@ -31,4 +32,5 @@ export interface Aval {
   cliente: number;
   nombres: string;
   apellidos: string;
+  nombreCompleto: string;
 }

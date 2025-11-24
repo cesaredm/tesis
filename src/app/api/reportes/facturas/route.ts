@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const [facturas] = await conn.query<RowDataPacket[]>("SELECT * FROM facturastienda where date(fecha) = ?", [fecha]);
 
     for (const factura of facturas) {
-      const [detalles] = await conn.query<RowDataPacket[]>("SELECT d.id, d.cantidad, d.precio, d.importe, d.precioVenta,p.descripcion, p.modelo, p.marca FROM detalles d join inventariotienda p on d.producto = p.id where d.factura = ?", [factura.id]);
+      const [detalles] = await conn.query<RowDataPacket[]>("SELECT d.id, d.cantidad, d.precio, d.importe, d.precioVenta,p.descripcion, p.modelo, p.marca, p.id producto FROM detalles d join inventariotienda p on d.producto = p.id where d.factura = ?", [factura.id]);
       factura.detalles = detalles;
     }
 

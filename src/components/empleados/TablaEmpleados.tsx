@@ -17,7 +17,7 @@ export function TablaEmpleados() {
   const [filters, setFilters] = useState<DataTableFilterMeta>({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
-  const router = useRouter()
+  const router = useRouter();
 
   function onChangeGlobalFilter(e: React.ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
@@ -46,8 +46,23 @@ export function TablaEmpleados() {
 
   return (
     <div>
-      <DataTable value={empleados} header={Header} showGridlines dataKey={"id"} size="small" loading={isLoadingEmpleados} rowHover stripedRows paginator rows={10} rowsPerPageOptions={[10, 50, 100, 500]} filters={filters} globalFilterFields={["nombres", "apellidos", "direccion", "dni", "municipio", "barrio", "departamento"]}>
-        <Column body={AccionesTemplate} headerStyle={{width:'3rem'}} />
+      <DataTable
+        value={empleados}
+        header={Header}
+        showGridlines
+        dataKey={"id"}
+        size="small"
+        loading={isLoadingEmpleados}
+        rowHover
+        stripedRows
+        paginator
+        rows={10}
+        rowsPerPageOptions={[10, 50, 100, 500]}
+        filters={filters}
+        globalFilterFields={["idempleado", "nombres", "apellidos", "direccion", "dni", "municipio", "barrio", "departamento"]} 
+      >
+        <Column body={AccionesTemplate} headerStyle={{ width: "3rem" }} />
+        <Column header="#Id" field="idempleado" />
         <Column header="Nombres" field="nombres" />
         <Column header="Apellidos" field="apellidos" />
         <Column header="Dni" field="dni" />

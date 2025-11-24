@@ -10,6 +10,7 @@ export interface Detalle {
   precioVenta: number;
   marca?: string;
   modelo?: string;
+  producto: number
 }
 
 export interface Factura {
@@ -19,9 +20,10 @@ export interface Factura {
   clienteid?: string;
   creditoid?: number;
   avalid?: string;
-  empleadofullname: string;
+  empleadofullname?: string;
   clientefullname?: string;
-  creditofullname?: string;
+  comprador: string;
+  avalfullname?: string;
   total: number;
   detalles: Detalle[];
 }
@@ -43,4 +45,10 @@ export interface DetalleSave extends Producto {
   precio: number;
   importe: number;
   precioOriginal: number;
+}
+
+export interface RespuestaFactura {
+  fecha: string;
+  numeroCorrelativo: number;
+  empleado: number;
 }

@@ -1,7 +1,7 @@
 "use client";
 import { useGetProductosQuery } from "@/hooks/productos";
 import { useFacturaStore } from "@/store/factura.store";
-import { DetalleSave} from "@/domain/entities/Facturas";
+import { DetalleSave } from "@/domain/entities/Facturas";
 import { Producto } from "@/domain/entities/Productos";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
@@ -12,34 +12,27 @@ import { ButtonGroup } from "primereact/buttongroup";
 import { Button } from "primereact/button";
 import { SidebarInventario } from "./SidebarInventario";
 import { Totales } from "./Totales";
-import { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Toast } from "primereact/toast";
 import { formatDecimal } from "@/utils/helpers";
 import { OverlayPanel } from "primereact/overlaypanel";
-import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
-import { useGetAvalesQuery, useGetClientesQuery } from "@/hooks/clientes";
 import { facturasServices } from "@/servicios/facturas.services";
-import { useGuardarFactura } from "@/hooks/useFacturacion";
-import { toastError, toastSuccess } from "@/utils/formatToast";
 import { Panel } from "primereact/panel";
 import { Card } from "primereact/card";
-import { BoxForm } from "../shared/BoxForm";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { DatosGenerales } from "./DatosGenerales";
+import { BotonesGuardar } from "./BotonesGuardar";
 
 export function TablaFactura() {
-  const { detalles, setReloadView, reloadView, factura, setCampoFactura, limpiarTodo } = useFacturaStore((state) => state);
+  const { detalles, setReloadView, reloadView } = useFacturaStore((state) => state);
   const { data: inventario } = useGetProductosQuery();
-  const { data: clientes, isLoading: isLoadingClientes } = useGetClientesQuery();
-  const { data: avales, isLoading: isLoadingAvales } = useGetAvalesQuery();
   const [seleccion, setSeleccion] = useState<DetalleSave[]>([]);
-  const [print, setPrint] = useState(false);
-  const {isMobile} = useIsMobile()
+  const { isMobile } = useIsMobile();
   const toast = useRef<Toast>(null);
   const opAdd = useRef<OverlayPanel>(null);
   const opDescuento = useRef<OverlayPanel>(null);
   const [detalle, setDetalle] = useState<DetalleSave>();
-  const { mutate: guardarFactura, isPending, isSuccess, isError, error, data } = useGuardarFactura();
 
   function agregarProducto(producto: Producto, cantidad: number) {
     const respuesta = facturasServices.agregarDetale(producto, cantidad, detalles);
@@ -122,17 +115,6 @@ export function TablaFactura() {
     setReloadView(reloadView + 1);
   }
 
-  function guardar(print: boolean) {
-    if (!isPending) {
-      console.log({ factura, detalles: Array.from(detalles.values()) });
-      guardarFactura({
-        factura,
-        detalles: Array.from(detalles.values()),
-      });
-      setPrint(print);
-    }
-  }
-
   function AccionesTemplate(row: DetalleSave) {
     return (
       <div className="p-buttonset">
@@ -194,86 +176,17 @@ export function TablaFactura() {
         <ButtonGroup>
           <Button label={isMobile ? "" : "Eliminar art."} size="small" severity="warning" icon="pi pi-eraser" onClick={eliminarArticulos} />
           <SidebarInventario />
-          <Button label="Cobrar" size="small" icon="pi pi-money-bill" disabled={detalles.size == 0} onClick={() => guardar(false)} loading={isPending} />
-          <Button label="Imprimir" size="small" icon="pi pi-print" disabled={detalles.size == 0} onClick={() => guardar(true)} loading={isPending} />
+          <BotonesGuardar />
         </ButtonGroup>
       </div>
     </div>
   );
-
-  function DatosCredito() {
-    return (
-      <div>
-        <section className="flex flex-wrap gap-2">
-          <div className="flex flex-col gap-1 w-full lg:w-1/4">
-            <label htmlFor="">Cliente</label>
-            <Dropdown
-              onChange={(e) => setCampoFactura("cliente", e.value)}
-              options={clientes}
-              value={factura.cliente}
-              optionLabel="nombreCompleto"
-              optionValue="idCliente"
-              placeholder="Selecciona un cliente"
-              filter
-              emptyMessage={isLoadingClientes ? "Cargando..." : "No se encontraron clientes."}
-            />
-          </div>
-          <div className="flex flex-col gap-1 w-full lg:w-1/4">
-            <label htmlFor="">Aval</label>
-            <Dropdown
-              onChange={(e) => setCampoFactura("aval", e.value)}
-              options={avales?.filter((a) => a.cliente != factura.cliente)}
-              value={factura.aval}
-              optionLabel="nombreCompleto"
-              optionValue="id"
-              placeholder="Selecciona un cliente"
-              filter
-              emptyMessage={isLoadingAvales ? "Cargando..." : "No se encontraron avales."}
-            />
-          </div>
-          <div className="flex items-end">
-            <Button
-              icon="pi pi-times"
-              label="Quitar"
-              onClick={() => {
-                setCampoFactura("cliente", null);
-                setCampoFactura("aval", null);
-              }}
-              disabled={!factura.cliente || !factura.aval}
-            />
-          </div>
-        </section>
-        <div className="flex">
-          <BoxForm>
-            <label htmlFor="">Comprador</label>
-            <InputText name="comprador" value={factura.comprador} onChange={(e) => setCampoFactura("comprador", e.target.value)} />
-          </BoxForm>
-        </div>
-      </div>
-    );
-  }
 
   const FooterTable = (
     <div>
       <Totales />
     </div>
   );
-
-  useEffect(() => {
-    if (isSuccess) {
-      toast.current?.show(toastSuccess(data));
-      limpiarTodo();
-      if (print) {
-        setTimeout(() => {
-          window.print();
-        }, 1000);
-      }
-    }
-
-    if (isError) {
-      toast.current?.show(toastError(error));
-    }
-  }, [isSuccess, isError]);
 
   return (
     <div>
@@ -302,7 +215,7 @@ export function TablaFactura() {
       </OverlayPanel>
       <Card>
         <Panel header="Datos de generales" className="mb-2" toggleable collapsed={true}>
-          <DatosCredito />
+          <DatosGenerales />
         </Panel>
         <DataTable value={Array.from(detalles.values())} selectionMode={"multiple"} header={Header} footer={FooterTable} selection={seleccion} onSelectionChange={({ value }) => setSeleccion(value)} emptyMessage="Factura vacia." showGridlines>
           <Column body={AccionesTemplate} headerStyle={{ width: "12rem" }} />

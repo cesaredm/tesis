@@ -1,4 +1,4 @@
-import { DetalleSave, Factura, FacturaSave, FacturaUpdate } from "@/domain/entities/Facturas";
+import { DetalleSave, Factura, FacturaSave, FacturaUpdate, RespuestaFactura } from "@/domain/entities/Facturas";
 import { Producto } from "@/domain/entities/Productos";
 import { FacturaRepository } from "@/domain/repositories/Factura.repository";
 import { RespuestaApi } from "@/types";
@@ -44,8 +44,9 @@ export class FacturaRepositoryImpl implements FacturaRepository {
       };
     }
   }
-  guardarFactura(factura: FacturaSave, detalles: DetalleSave[]): Promise<RespuestaApi> {
-    return axios.post("/facturacion", { factura, detalles }).then((res) => res.data);
+  guardarFactura(factura: FacturaSave, detalles: DetalleSave[]): Promise<RespuestaFactura> {
+    const fechaFormat = format({ date: new Date(), format: "YYYY-MM-DD", tz: "America/Tegucigalpa" });
+    return axios.post("/facturacion", { factura: { ...factura, fecha: fechaFormat }, detalles }).then((res) => res.data);
   }
   actualizarFactura(factura: FacturaUpdate): Promise<RespuestaApi> {
     console.log(factura);

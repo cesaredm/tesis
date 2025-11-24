@@ -1,5 +1,5 @@
 import { RespuestaApi } from "@/types";
-import { DetalleSave, Factura, FacturaSave } from "../../entities/Facturas";
+import { DetalleSave, Factura, FacturaSave, RespuestaFactura } from "../../entities/Facturas";
 import { FacturaRepository } from "../../repositories/Factura.repository";
 import { Producto } from "../../entities/Productos";
 
@@ -14,7 +14,7 @@ export class FacturacionUseCases {
         return this.facturaRepository.getFacturas(fecha);
     }
 
-    guardarFactura(factura: FacturaSave, detalles: DetalleSave[]): Promise<RespuestaApi>{
+    guardarFactura(factura: FacturaSave, detalles: DetalleSave[]): Promise<RespuestaFactura>{
         return this.facturaRepository.guardarFactura(factura, detalles);
     }
 }
