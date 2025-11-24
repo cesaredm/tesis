@@ -194,10 +194,10 @@ const TicketFactura = dynamic(
                 {totales.descuento > 0 && (
                   <tr>
                     <th className="price totales" style={{ paddingLeft: "0", width: "22mm" }} colSpan={1} rowSpan={1}>
-                      Sub. C$
+                      Sub
                     </th>
                     <th className="price totales" colSpan={2}>
-                      {totales.subtotal}
+                      L. {totales.subtotal}
                     </th>
                   </tr>
                 )}
@@ -205,7 +205,7 @@ const TicketFactura = dynamic(
                 {totales.descuento > 0 && (
                   <tr>
                     <th className="price totales" colSpan={1} rowSpan={1}>
-                      Sub
+                      Desc
                     </th>
                     <th className="price totales" colSpan={2}>
                       L. {totales.descuento}
