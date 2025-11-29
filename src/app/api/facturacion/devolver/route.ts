@@ -25,7 +25,7 @@ export async function POST(req: Request) {
   try {
     await conn.beginTransaction();
     const [detalle] = await conn.query<RowDataPacket[]>("SELECT * from detalles where id = ?", [data.id]);
-    const { cantidad: cantidadComprada, factura, precio, producto } = detalle[0];
+    const { factura, precio, producto } = detalle[0];
 
     const datosValidos = SchemaDevolver.parse({ ...data, producto, factura });
     await conn.query("UPDATE detalles SET cantidad = cantidad - ?, importe = importe - ? WHERE id = ?", [datosValidos.cantidad, calcularNuevoImporte(datosValidos.cantidad, precio), datosValidos.id]);
