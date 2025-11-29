@@ -11,6 +11,7 @@ export interface Detalle {
   marca?: string;
   modelo?: string;
   producto: number
+  facturaid: number
 }
 
 export interface Factura {

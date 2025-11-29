@@ -57,4 +57,9 @@ export class FacturaRepositoryImpl implements FacturaRepository {
     const { data } = await axios.get("/reportes/facturas", { params: { fecha: formatedDate } });
     return data;
   }
+
+  async devolver(id: number, cantidad: number): Promise<RespuestaApi> {
+    const { data } = await axios.post("/facturacion/devolver", { id, cantidad});
+    return data;
+  }
 }

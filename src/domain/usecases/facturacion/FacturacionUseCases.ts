@@ -4,17 +4,21 @@ import { FacturaRepository } from "../../repositories/Factura.repository";
 import { Producto } from "../../entities/Productos";
 
 export class FacturacionUseCases {
-    constructor(private facturaRepository: FacturaRepository){}
+  constructor(private facturaRepository: FacturaRepository) {}
 
-    agregarDetalle(producto: Producto, cantidad: number, detalles: Map<string | number, DetalleSave>): RespuestaApi {
-        return this.facturaRepository.agregarDetalle(producto, cantidad, detalles);
-    }
+  agregarDetalle(producto: Producto, cantidad: number, detalles: Map<string | number, DetalleSave>): RespuestaApi {
+    return this.facturaRepository.agregarDetalle(producto, cantidad, detalles);
+  }
 
-    getFacturas(fecha: string | Date): Promise<Factura[]> {
-        return this.facturaRepository.getFacturas(fecha);
-    }
+  getFacturas(fecha: string | Date): Promise<Factura[]> {
+    return this.facturaRepository.getFacturas(fecha);
+  }
 
-    guardarFactura(factura: FacturaSave, detalles: DetalleSave[]): Promise<RespuestaFactura>{
-        return this.facturaRepository.guardarFactura(factura, detalles);
-    }
+  guardarFactura(factura: FacturaSave, detalles: DetalleSave[]): Promise<RespuestaFactura> {
+    return this.facturaRepository.guardarFactura(factura, detalles);
+  }
+
+  devolverFactura(id: number, cantidad: number): Promise<RespuestaApi> {
+    return this.facturaRepository.devolver(id, cantidad);
+  }
 }

@@ -2,26 +2,33 @@
 import { Calendar } from "primereact/calendar";
 import { DataTable, DataTableExpandedRows, DataTableValueArray } from "primereact/datatable";
 import { BoxForm } from "../shared/BoxForm";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Nullable } from "primereact/ts-helpers";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { getFacturas } from "@/servicios/facturas.services";
 import { Detalle, Factura } from "@/domain/entities/Facturas";
 import { Toast } from "primereact/toast";
-import { toastError } from "@/utils/formatToast";
+import { toastError, toastSuccess } from "@/utils/formatToast";
 import { formatDecimal } from "@/utils/helpers";
 import TicketFactura from "../tickets/TicketFactura";
 import { useFacturaStore } from "@/store/factura.store";
+import { useDevolverFactura } from "@/hooks/useFacturacion";
+import { OverlayPanel } from "primereact/overlaypanel";
+import { InputNumber } from "primereact/inputnumber";
 
 export function FacturasEmitidasDiario() {
   const { detalles, setAval, setCliente, setCampoFactura, setRespuestaFactura, setTotales } = useFacturaStore((state) => state);
+  const { mutate: devolverFactura, isSuccess: isDevolucionSuccess, isError: isDevolucionError, error: errorDevolucion, data: dataDevolucion, isPending: isDevolucionPending } = useDevolverFactura();
+  const [cantidadDevolucion, setCantidadDevolucion] = useState<number | null>(null);
+  const [productoDevolver, setProductoDevolver] = useState<Detalle | null>(null);
   const [fecha, setFecha] = useState<Nullable<Date>>(new Date());
   const [facturas, setFacturas] = useState<Factura[]>([]);
   const [loading, setLoading] = useState(false);
   const [expandedRows, setExpandedRows] = useState<DataTableExpandedRows | DataTableValueArray | undefined>(undefined);
   const ticketRef = useRef<HTMLDivElement>(null);
   const toast = useRef<Toast>(null);
+  const op = useRef<OverlayPanel>(null);
 
   async function getFacturasPorFecha() {
     if (!fecha) return;
@@ -35,6 +42,19 @@ export function FacturasEmitidasDiario() {
     }
 
     setLoading(false);
+  }
+
+  function handleSubmitDevolucion(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!cantidadDevolucion || cantidadDevolucion <= 0 || !productoDevolver) {
+      toast.current?.show(toastError("Ingrese una cantidad válida"));
+      return;
+    }
+
+    devolverFactura({
+      id: productoDevolver.id,
+      cantidad: cantidadDevolucion,
+    });
   }
 
   function calcularTotales(detalles: Detalle[]) {
@@ -111,10 +131,24 @@ export function FacturasEmitidasDiario() {
   function AccionesTemplate(row: Factura) {
     return <Button icon="pi pi-print" size="small" text onClick={() => reImprimir(row)} />;
   }
+  function AccionesDetalleTemplate(row: Detalle) {
+    return (
+      <Button
+        icon="pi pi-minus"
+        size="small"
+        tooltip="Devolver"
+        onClick={(e) => {
+          setProductoDevolver(row);
+          op.current?.toggle(e);
+        }}
+      />
+    );
+  }
 
   function ExpandedRowsTemplate(data: Factura) {
     return (
       <DataTable value={data.detalles} className="m-0" dataKey="id" showGridlines header={"Detalles de la factura #" + data.id} size="small">
+        <Column body={AccionesDetalleTemplate} headerStyle={{ width: "3rem" }} />
         <Column field="id" header="# ID" />
         <Column field="descripcion" header="Descripcion" />
         <Column field="cantidad" header="Cantidad" />
@@ -126,9 +160,34 @@ export function FacturasEmitidasDiario() {
     );
   }
 
+  useEffect(() => {
+    if (isDevolucionSuccess) {
+      toast.current?.show(toastSuccess(dataDevolucion));
+      getFacturasPorFecha();
+      op.current?.hide();
+      setCantidadDevolucion(null)
+    }
+
+    if (isDevolucionError) {
+      toast.current?.show(toastError(errorDevolucion));
+    }
+  }, [isDevolucionSuccess, isDevolucionError]);
+
   return (
     <div>
       <TicketFactura ref={ticketRef} />
+      <Toast ref={toast} />
+      <OverlayPanel ref={op}>
+        <form onSubmit={handleSubmitDevolucion}>
+          <BoxForm>
+            <label htmlFor="">Cantidad</label>
+            <InputNumber mode="decimal" locale="es-HN" value={cantidadDevolucion} onChange={(e) => setCantidadDevolucion(e.value)} minFractionDigits={2} maxFractionDigits={2} autoFocus onFocus={(e) => e.target.select()} required />
+          </BoxForm>
+          <footer className="flex justify-end mt-2">
+            <Button label="Devolver" type="submit" size="small" loading={isDevolucionPending} />
+          </footer>
+        </form>
+      </OverlayPanel>
       <DataTable
         value={facturas}
         header={Header}
@@ -148,7 +207,7 @@ export function FacturasEmitidasDiario() {
         scrollHeight="60vh"
       >
         <Column expander headerStyle={{ width: "3rem" }} />
-        <Column body={AccionesTemplate} />
+        <Column body={AccionesTemplate} headerStyle={{ width: "3rem" }} />
         <Column field={"id"} header={"# Factura"} />
         <Column field={"f"} header={"Fecha"} />
         <Column field={"total"} body={TotalTemplate} header={"total"} />
