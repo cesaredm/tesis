@@ -9,5 +9,7 @@ export async function GET() {
     } catch (error) {
        console.log(error) 
        return Response.json(respuestaError(), {status: 500})
+    }finally{
+      conn.release()
     }
 }

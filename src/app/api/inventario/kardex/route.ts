@@ -40,5 +40,7 @@ export async function POST(request: Request) {
       return Response.json(respuestaError({ error: error.errors.map((e) => e.message).join(", ") }), { status: 400 });
     }
     return Response.json(respuestaError(), { status: 400 });
+  }finally{
+    conn.release()
   }
 }

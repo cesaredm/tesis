@@ -19,6 +19,34 @@ export function useGetProductosQuery() {
   };
 }
 
+export function useGetFullProductosQuery() {
+  const productos = useQuery({
+    queryKey: ["fullproductos"],
+    queryFn: () => productoUseCases.getFullProductos(),
+    staleTime: 1000 * 60 * 5, // 5 min
+  });
+
+  return {
+    ...productos,
+  };
+}
+
+export function useReIntegrarProductoMutation() {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: (id: number) => productoUseCases.reIntegrarProducto(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["fullproductos"] });
+      queryClient.invalidateQueries({ queryKey: ["productos"] });
+    },
+  });
+
+  return {
+    ...mutation,
+  };
+}
+
 export function useGuardarProductoMutation() {
   const queryClient = useQueryClient();
 
@@ -26,6 +54,7 @@ export function useGuardarProductoMutation() {
     mutationFn: (producto: ProductoSave) => productoUseCases.crear(producto),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["productos"] });
+      queryClient.invalidateQueries({ queryKey: ["fullproductos"] });
     },
   });
 
@@ -41,6 +70,7 @@ export function useActualizarProductoMutation() {
     mutationFn: (producto: ProductoUpdate) => productoUseCases.actualizar(producto),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["productos"] });
+      queryClient.invalidateQueries({ queryKey: ["fullproductos"] });
     },
   });
 
@@ -56,6 +86,7 @@ export function useEliminarProductoMutation() {
     mutationFn: (productos: number[]) => productoUseCases.eliminar(productos),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["productos"] });
+      queryClient.invalidateQueries({ queryKey: ["fullproductos"] });
     },
   });
 

@@ -1,5 +1,5 @@
-import { axios} from "@/utils/axiosConfig";
-import { Producto, ProductoSave, ProductoUpdate} from "@/domain/entities/Productos";
+import { axios } from "@/utils/axiosConfig";
+import { Producto, ProductoSave, ProductoUpdate } from "@/domain/entities/Productos";
 import { RespuestaApi } from "@/types";
 import { ProductoRepository } from "../../domain/repositories/Productos.repository";
 
@@ -21,5 +21,14 @@ export class ProductoRepositoryImpl implements ProductoRepository {
 
   async getResumenInventario(): Promise<{ productos: number; marcas: number; proveedores: number; pedidosPendientes: number }> {
     return axios.get("/inventario/").then((res) => res.data);
+  }
+
+  async getFullProductos(): Promise<Producto[]> {
+    const { data } = await axios.get("/inventario/productos/fullProductos");
+    return data;
+  }
+  async reIntegrarProducto(id: number): Promise<RespuestaApi> {
+    const { data } = await axios.patch("/inventario/productos/fullProductos", { id });
+    return data;
   }
 }

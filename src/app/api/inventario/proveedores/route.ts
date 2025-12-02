@@ -16,12 +16,15 @@ const ProveedorSchemaUpdate = ProveedorSchema.extend({
 });
 
 export async function GET() {
+  const conn = await conexiondb.getConnection()
   try {
-    const [result] = await conexiondb.query<RowDataPacket[]>("SELECT * FROM proveedores");
+    const [result] = await conn.query<RowDataPacket[]>("SELECT * FROM proveedores");
     return Response.json(result);
   } catch (error) {
     console.log(error);
     return Response.json(respuestaError({ error: "Error al obtener los proveedores" }), { status: 400 });
+  }finally{
+    conn.release()
   }
 }
 

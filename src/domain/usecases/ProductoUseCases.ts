@@ -19,4 +19,11 @@ export class ProductoUseCases {
   async getResumenInventario(): Promise<{ productos: number; marcas: number; proveedores: number; pedidosPendientes: number }> {
     return this.productoRepository.getResumenInventario();
   }
+  async getFullProductos(): Promise<Producto[]> {
+    return this.productoRepository.getFullProductos();
+  }
+
+  async reIntegrarProducto(id: number): Promise<RespuestaApi> {
+    return this.productoRepository.reIntegrarProducto(id);
+  }
 }

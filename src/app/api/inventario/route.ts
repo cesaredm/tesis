@@ -2,12 +2,14 @@ import { conexiondb } from "@/db/dbconfig";
 import { respuestaError } from "@/utils/respuestas";
 
 export async function GET() {
+
+  const conn = await conexiondb.getConnection()
   try {
     const [proveedores, marcas, pedidosPendientes, productos] = await Promise.all([
-      conexiondb.query("SELECT COUNT(id) as conteo FROM proveedores"),
-      conexiondb.query("SELECT COUNT(id) as conteo FROM marca"),
-      conexiondb.query("SELECT COUNT(id) as conteo FROM pedidos WHERE estado = 'pendiente'"),
-      conexiondb.query("SELECT COUNT(id) as conteo FROM productos WHERE estado = 1"),
+      conn.query("SELECT COUNT(id) as conteo FROM proveedores"),
+      conn.query("SELECT COUNT(id) as conteo FROM marca"),
+      conn.query("SELECT COUNT(id) as conteo FROM pedidos WHERE estado = 'pendiente'"),
+      conn.query("SELECT COUNT(id) as conteo FROM productos WHERE estado = 1"),
     ]);
 
 
@@ -20,5 +22,7 @@ export async function GET() {
   } catch (error) {
     console.log(error);
     return Response.json(respuestaError(), { status: 400 });
+  }finally{
+    conn.release()
   }
 }

@@ -16,5 +16,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.log(error);
     return Response.json(respuestaError(), { status: 400 });
+  }finally{
+    conn.release()
   }
 }

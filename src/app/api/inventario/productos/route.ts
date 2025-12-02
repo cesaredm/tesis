@@ -40,7 +40,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const user = await auth();
-    //@ts-expect-error holla
+  //@ts-expect-error holla
   const empleado = user?.user?.empleado;
   const conn = await conexiondb.getConnection();
   try {
@@ -51,15 +51,20 @@ export async function POST(req: NextRequest) {
     const [resKardex] = await conn.query<ResultSetHeader>("INSERT INTO kardex SET ?", [
       { producto: res.insertId, fecha: format({ date: new Date(), format: "YYYY-MM-DD HH:mm:ss", tz: "America/Tegucigalpa" }), tipoMovimiento: "Ingreso", cantidad: parsedData.stock, empleado, nota: "Inventario inicial" },
     ]);
-    await conn.commit();
     if (res.affectedRows > 0 && resKardex.affectedRows > 0) {
+      await conn.commit();
       return Response.json(respuesta(), { status: 200 });
     }
+    await conn.rollback();
     return Response.json(respuestaError(), { status: 404 });
-  } catch (error) {
+  } catch (error: any) {
     console.log(error);
+    await conn.rollback();
     if (error instanceof z.ZodError) return Response.json(respuestaError({ error: error.issues.map((issue) => issue.message).join(", \n ") }), { status: 400 });
+    if (error.code === "ER_DUP_ENTRY") return Response.json(respuestaError({ error: "El código de barra ya existe" }), { status: 400 });
     return Response.json(respuestaError(), { status: 404 });
+  } finally {
+    conn.destroy();
   }
 }
 

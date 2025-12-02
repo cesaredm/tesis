@@ -8,48 +8,73 @@ function parseNumber(value: unknown) {
 }
 
 const PedidoSchema = z.object({
-  proveedor: z.number({
-    required_error: "El proveedor es requerido",
-    invalid_type_error: "El proveedor debe ser un número",
-  }).positive({ message: "El proveedor debe ser un número positivo" }).int("El proveedor debe ser un número entero"),
-  fecha: z.string({
-    required_error: "La fecha es requerida",
-    invalid_type_error: "La fecha debe ser una cadena",
-  }).min(1, { message: "La fecha es requerida" }),
-  estado: z.string({
-    required_error: "El estado es requerido",
-    invalid_type_error: "El estado debe ser una cadena",
-  }).min(1, { message: "El estado es requerido" }),
+  proveedor: z
+    .number({
+      required_error: "El proveedor es requerido",
+      invalid_type_error: "El proveedor debe ser un número",
+    })
+    .positive({ message: "El proveedor debe ser un número positivo" })
+    .int("El proveedor debe ser un número entero"),
+  fecha: z
+    .string({
+      required_error: "La fecha es requerida",
+      invalid_type_error: "La fecha debe ser una cadena",
+    })
+    .min(1, { message: "La fecha es requerida" }),
+  estado: z
+    .string({
+      required_error: "El estado es requerido",
+      invalid_type_error: "El estado debe ser una cadena",
+    })
+    .min(1, { message: "El estado es requerido" }),
 });
 
 const PedidoSchemaUpdate = PedidoSchema.extend({
-  id: z.number({
-    required_error: "El id es requerido",
-    invalid_type_error: "El id debe ser un número",
-  }).positive({ message: "El id debe ser un número positivo" }).int("El id debe ser un número entero"),
+  id: z
+    .number({
+      required_error: "El id es requerido",
+      invalid_type_error: "El id debe ser un número",
+    })
+    .positive({ message: "El id debe ser un número positivo" })
+    .int("El id debe ser un número entero"),
 });
 
 const DetalleSchema = z.object({
-  pedido: z.number({
-    required_error: "El pedido es requerido",
-    invalid_type_error: "El pedido debe ser un número",
-  }).positive({ message: "El pedido debe ser un número positivo" }).int("El pedido debe ser un número entero"),
-  producto: z.number({
-    required_error: "El producto es requerido",
-    invalid_type_error: "El producto debe ser un número",
-  }).positive({ message: "El producto debe ser un número positivo" }).int("El producto debe ser un número entero"),
-  precio: preprocess(parseNumber, z.number({
-    required_error: "El precio es requerido",
-    invalid_type_error: "El precio debe ser un número",
-  }).positive({ message: "El precio debe ser un número positivo" })),
-  cantidad: z.number({
-    required_error: "La cantidad es requerido",
-    invalid_type_error: "La cantidad debe ser un número",
-  }).positive({ message: "La cantidad debe ser un número positivo" }),
-  importe: z.number({
-    required_error: "El importe es requerido",
-    invalid_type_error: "El importe debe ser un número",
-  }).positive({ message: "El importe debe ser un número positivo" }),
+  pedido: z
+    .number({
+      required_error: "El pedido es requerido",
+      invalid_type_error: "El pedido debe ser un número",
+    })
+    .positive({ message: "El pedido debe ser un número positivo" })
+    .int("El pedido debe ser un número entero"),
+  producto: z
+    .number({
+      required_error: "El producto es requerido",
+      invalid_type_error: "El producto debe ser un número",
+    })
+    .positive({ message: "El producto debe ser un número positivo" })
+    .int("El producto debe ser un número entero"),
+  precio: preprocess(
+    parseNumber,
+    z
+      .number({
+        required_error: "El precio es requerido",
+        invalid_type_error: "El precio debe ser un número",
+      })
+      .positive({ message: "El precio debe ser un número positivo" })
+  ),
+  cantidad: z
+    .number({
+      required_error: "La cantidad es requerido",
+      invalid_type_error: "La cantidad debe ser un número",
+    })
+    .positive({ message: "La cantidad debe ser un número positivo" }),
+  importe: z
+    .number({
+      required_error: "El importe es requerido",
+      invalid_type_error: "El importe debe ser un número",
+    })
+    .positive({ message: "El importe debe ser un número positivo" }),
 });
 
 export async function POST(req: Request) {
@@ -61,7 +86,7 @@ export async function POST(req: Request) {
     const [result] = await conn.query<ResultSetHeader>("INSERT INTO pedidos SET ?", [parsedData]);
     if (result.affectedRows > 0) {
       for (const detalle of detalles) {
-        const parsedDetalle = DetalleSchema.parse({...detalle, pedido: result.insertId});
+        const parsedDetalle = DetalleSchema.parse({ ...detalle, pedido: result.insertId });
         await conn.query<ResultSetHeader>("INSERT INTO productoproveedor SET ?", [parsedDetalle]);
       }
       await conn.commit();
@@ -101,15 +126,18 @@ export async function PATCH(req: Request) {
 }
 
 export async function GET() {
+  const conn = await conexiondb.getConnection();
   try {
-    const [pedidos] = await conexiondb.query<RowDataPacket[]>("SELECT p.*,DATE_FORMAT(p.fecha, '%d-%m-%Y %r') f FROM pedidostienda p");
+    const [pedidos] = await conn.query<RowDataPacket[]>("SELECT p.*,DATE_FORMAT(p.fecha, '%d-%m-%Y %r') f FROM pedidostienda p");
     for (const pedido of pedidos) {
-      const [detalles] = await conexiondb.query<RowDataPacket[]>("SELECT pp.*, p.descripcion, m.nombre marca FROM productoproveedor pp inner join productos p on pp.producto=p.id inner join marca m on p.marca=m.id WHERE pp.pedido = ?", [pedido.id]);
+      const [detalles] = await conn.query<RowDataPacket[]>("SELECT pp.*, p.descripcion, m.nombre marca FROM productoproveedor pp inner join productos p on pp.producto=p.id inner join marca m on p.marca=m.id WHERE pp.pedido = ?", [pedido.id]);
       pedido.detalles = detalles;
     }
     return Response.json(pedidos, { status: 200 });
   } catch (error) {
     console.log(error);
     return Response.json(respuestaError({ error: "Error al obtener los pedidos" }), { status: 400 });
+  } finally {
+    conn.release();
   }
 }

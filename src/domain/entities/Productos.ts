@@ -8,6 +8,7 @@ export interface Producto {
   stock: number;
   idmarca: number;
   marca: string;
+  estado: number
 }
 
 export interface ProductoSave {
