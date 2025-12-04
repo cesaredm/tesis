@@ -45,7 +45,6 @@ export interface DetalleSave extends Producto {
   cantidad: number;
   precio: number;
   importe: number;
-  precioOriginal: number;
 }
 
 export interface RespuestaFactura {

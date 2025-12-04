@@ -32,7 +32,6 @@ export class FacturaRepositoryImpl implements FacturaRepository {
         precio: producto.precioVenta,
         cantidad: cantidad,
         importe: cantidad * producto.precioVenta,
-        precioOriginal: producto.precioVenta,
       };
 
       detalles.set(producto.id, detalle);

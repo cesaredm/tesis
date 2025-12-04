@@ -64,8 +64,8 @@ export function FacturasEmitidasDiario() {
     return detalles.reduce(
       (totales, item) => {
         totales.total += Number(item.importe);
-        totales.descuento += Number(item.precioVenta) - Number(item.precio);
-        totales.subtotal += Number(item.precioVenta);
+        totales.descuento += (Number(item.precioVenta) - Number(item.precio)) * Number(item.cantidad);
+        totales.subtotal += Number(item.cantidad) * Number(item.precioVenta);
         return { ...totales };
       },
       { subtotal: 0, descuento: 0, total: 0 }
@@ -79,7 +79,6 @@ export function FacturasEmitidasDiario() {
     setCampoFactura("cliente", factura.clienteid);
     setCampoFactura("aval", factura.avalid);
     const totales = calcularTotales(factura.detalles);
-    console.log(totales);
     setTotales(totales);
     setRespuestaFactura({
       numeroCorrelativo: Number(factura.id),
@@ -99,7 +98,6 @@ export function FacturasEmitidasDiario() {
         marca: "",
         modelo: "",
         precio: d.precio,
-        precioOriginal: d.precioVenta,
         precioCosto: 0,
         precioVenta: d.precioVenta,
         producto: d.producto,

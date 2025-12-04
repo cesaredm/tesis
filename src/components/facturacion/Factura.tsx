@@ -143,7 +143,7 @@ export function TablaFactura() {
 
   function DescripcionTable(row: DetalleSave) {
     const importe = row.cantidad * row.precio;
-    const descuento = row.precioOriginal - row.precio;
+    const descuento = row.precioVenta - row.precio;
     return (
       <div>
         <div className="flex-col md:flex-row md:justify-between gap-1">

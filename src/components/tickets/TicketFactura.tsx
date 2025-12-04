@@ -84,10 +84,10 @@ const TicketFactura = dynamic(
          *                    descuento es el valor del descuento.
          */
         function validarDescuento(item: DetalleSave) {
-          const precioVenta = Number(item.precioVenta);
-          const precioOriginal = Number(item.precioOriginal);
+          const precioVenta = Number(item.precio);
+          const precioOriginal = Number(item.precioVenta);
           const isDescuento = precioVenta >= precioOriginal ? false : true;
-          const descuento = Number(item.precioOriginal) - Number(item.precioVenta);
+          const descuento = Number(item.precioVenta) - Number(item.precio);
 
           return {
             isDescuento,
@@ -162,7 +162,7 @@ const TicketFactura = dynamic(
                           {item.cantidad}
                         </td>
                         <td className={`price ${!isDescuento ? "border-item" : ""}`} style={{ width: isMobile ? "18mm" : "25mm" }}>
-                          {item.precioVenta}
+                          {formatDecimal(item.precio)}
                         </td>
                         <td className={`importe ${!isDescuento ? "border-item" : ""}`} style={{ width: isMobile ? "25mm" : "40mm" }}>
                           L. {formatDecimal(item.importe)}
@@ -177,7 +177,7 @@ const TicketFactura = dynamic(
                             {formatDecimal(descuento)}
                           </td>
                           <td className="importe border-item" style={{ width: isMobile ? "25mm" : "40mm" }}>
-                            {formatDecimal(item.precioOriginal)}
+                            {formatDecimal(item.precioVenta)}
                           </td>
                         </tr>
                       ) : (
@@ -197,7 +197,7 @@ const TicketFactura = dynamic(
                       Sub
                     </th>
                     <th className="price totales" colSpan={2}>
-                      L. {totales.subtotal}
+                      L. {formatDecimal(totales.subtotal)}
                     </th>
                   </tr>
                 )}
@@ -208,7 +208,7 @@ const TicketFactura = dynamic(
                       Desc
                     </th>
                     <th className="price totales" colSpan={2}>
-                      L. {totales.descuento}
+                      L. {formatDecimal(totales.descuento)}
                     </th>
                   </tr>
                 )}
