@@ -16,10 +16,13 @@ import { useFacturaStore } from "@/store/factura.store";
 import { useDevolverFactura } from "@/hooks/useFacturacion";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { InputNumber } from "primereact/inputnumber";
+import { useSession } from "next-auth/react";
+import { permisos } from "@/utils/permisos";
 
 export function FacturasEmitidasDiario() {
   const { detalles, setAval, setCliente, setCampoFactura, setRespuestaFactura, setTotales } = useFacturaStore((state) => state);
   const { mutate: devolverFactura, isSuccess: isDevolucionSuccess, isError: isDevolucionError, error: errorDevolucion, data: dataDevolucion, isPending: isDevolucionPending } = useDevolverFactura();
+  const {data} = useSession()
   const [cantidadDevolucion, setCantidadDevolucion] = useState<number | null>(null);
   const [productoDevolver, setProductoDevolver] = useState<Detalle | null>(null);
   const [fecha, setFecha] = useState<Nullable<Date>>(new Date());
@@ -141,6 +144,7 @@ export function FacturasEmitidasDiario() {
           setProductoDevolver(row);
           op.current?.toggle(e);
         }}
+        disabled={data?.user.permiso !== permisos.ADMIN}
       />
     );
   }

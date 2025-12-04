@@ -9,8 +9,11 @@ import { Estado } from "@/domain/entities/Reportes";
 import { Button } from "primereact/button";
 import { Spinner2 } from "@/components/shared/Spinner2";
 import { InputSwitch } from "primereact/inputswitch";
+import { useSession } from "next-auth/react";
+import { permisos } from "@/utils/permisos";
 
 export default function EstadoDiarioPage() {
+  const { data } = useSession();
   const [fecha1, setFecha1] = useState<Date | null>(new Date());
   const [fecha2, setFecha2] = useState<Date | null>(new Date());
   const [estado, setEstado] = useState<Estado>({
@@ -73,10 +76,12 @@ export default function EstadoDiarioPage() {
             <Button size="small" label="Actualizar" onClick={generarReporte} icon="pi pi-refresh" loading={loading} />
           </div>
         </BoxForm>
-        <BoxForm>
-          <label htmlFor="">{isMensual ? "Mes" : "Diario"}</label>
-          <InputSwitch checked={isMensual} onChange={(e) => setIsMensual(e.value)} />
-        </BoxForm>
+        {data?.user.permiso == permisos.ADMIN && (
+          <BoxForm>
+            <label htmlFor="">{isMensual ? "Mes" : "Diario"}</label>
+            <InputSwitch checked={isMensual} onChange={(e) => setIsMensual(e.value)} />
+          </BoxForm>
+        )}
       </header>
       <Divider />
 

@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     }
 
     const [users] = await conexiondb.query<RowDataPacket[]>(
-      "SELECT u.usuario, u.empleado FROM usuarios u WHERE u.usuario=? AND u.password=?",
+      "SELECT u.usuario, u.empleado, u.permiso FROM usuarios u WHERE u.usuario=? AND u.password=?",
       [usuario, password]
     );
 

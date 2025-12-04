@@ -9,10 +9,13 @@ import { confirmPopup, ConfirmPopup } from "primereact/confirmpopup";
 import { Toast } from "primereact/toast";
 import { useEffect, useRef } from "react";
 import { toastError, toastSuccess } from "@/utils/formatToast";
+import { useSession } from "next-auth/react";
+import { permisos } from "@/utils/permisos";
 
 export function TablaPagosCliente({ cliente }: { cliente: number }) {
   const { data: pagos, isLoading, isError} = useGetPagosQuery(cliente);
   const { mutate: eliminarPago, isPending, isError: isDeleteError, isSuccess: isSuccessEliminar, error: deleteError, data: dataEliminar } = useEliminarPagoMutation();
+  const {data: session} = useSession()
 
   const toast = useRef<Toast>(null);
 
@@ -31,7 +34,7 @@ export function TablaPagosCliente({ cliente }: { cliente: number }) {
   function AccionesTemplate(row: Pago) {
     return (
       <div className="flex gap-0.5">
-        <Button severity="danger" text icon="pi pi-trash" size="small" onClick={(e) => confirmarEliminacion(row.id, e)} loading={isPending} />
+        <Button severity="danger" text icon="pi pi-trash" size="small" onClick={(e) => confirmarEliminacion(row.id, e)} loading={isPending} disabled={session?.user?.permiso !== permisos.ADMIN} />
       </div>
     );
   }

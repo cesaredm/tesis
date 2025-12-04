@@ -1,3 +1,4 @@
+import { Principal } from "@/components/shared/principal";
 import { Tools } from "@/components/shared/Tools";
 
 const items = [
@@ -11,7 +12,7 @@ export default function LayoutCliente({ children }: { children: React.ReactNode 
       <header>
         <Tools options={items} />
       </header>
-      {children}
+      <Principal children={children} />
     </div>
   );
 }

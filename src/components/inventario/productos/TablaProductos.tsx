@@ -3,7 +3,7 @@ import { useEliminarProductoMutation, useGetProductosQuery } from "@/hooks/produ
 import { Producto } from "@/domain/entities/Productos";
 import { RespuestaApi } from "@/types";
 import { formatDecimal } from "@/utils/helpers";
-import { Column } from "primereact/column";
+import { Column, ColumnFilterElementTemplateOptions } from "primereact/column";
 import { DataTable, DataTableFilterMeta } from "primereact/datatable";
 import { Button } from "primereact/button";
 import { IconField } from "primereact/iconfield";
@@ -18,13 +18,17 @@ import { Menu } from "primereact/menu";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Sidebar } from "primereact/sidebar";
 import { FormKardex } from "../kardex/FormKardex";
+import { useSession } from "next-auth/react";
+import { permisos } from "@/utils/permisos";
 
 export function TableProductos() {
   const { data: productos, isLoading } = useGetProductosQuery();
+  const {data: session} = useSession()
   const [seleccion, setSeleccion] = useState<Producto[]>([]);
   const { mutate: eliminar, isPending, error, isError, isSuccess, data } = useEliminarProductoMutation();
   const [filters, setFilters] = useState<DataTableFilterMeta>({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    stock: { value: null, matchMode: FilterMatchMode.LESS_THAN_OR_EQUAL_TO },
   });
   const [productoSeleccionado, setProductoSeleccionado] = useState<Producto | null>(null);
   const opcionesProductoRef = useRef<Menu>(null);
@@ -87,10 +91,14 @@ export function TableProductos() {
     setProductoSeleccionado(producto);
   }
 
+  function validarBotonEliminar(){
+    return seleccion.length === 0 || isPending || session?.user.permiso !== permisos.ADMIN
+  }
+
   const HeaderTable = (
     <div className="flex justify-between items-center">
       <div>
-        <Button size="small" icon={isPending ? "pi pi-spin pi-spinner" : "pi pi-trash"} severity="danger" label="Eliminar" disabled={seleccion.length === 0 || isPending} onClick={confirmarEliminacion} />
+        <Button size="small" icon={isPending ? "pi pi-spin pi-spinner" : "pi pi-trash"} severity="danger" label="Eliminar" disabled={validarBotonEliminar()} onClick={confirmarEliminacion} />
       </div>
       <div>
         <IconField>
@@ -163,16 +171,17 @@ export function TableProductos() {
         selection={seleccion}
         onSelectionChange={(e) => setSeleccion(e.value)}
         filters={filters}
+        filterDisplay="row"
         globalFilterFields={["codigoBarra", "descripcion", "modelo", "marca"]}
       >
         <Column selectionMode="multiple" headerStyle={{ width: "3rem" }} />
         <Column body={Acciones} headerStyle={{ width: "3rem" }} />
         <Column field="codigoBarra" header="Codigo Barras" />
-        <Column field="descripcion" header="Descripción" />
-        <Column field="precioCosto" header="PrecioCosto" body={PrecioCostoTable} />
-        <Column field="precioVenta" header="Precio venta" body={PrecioVentaTable} />
+        <Column field="descripcion" header="Descripción" sortable />
+        <Column field="precioCosto" header="PrecioCosto" body={PrecioCostoTable} sortable />
+        <Column field="precioVenta" header="Precio venta" body={PrecioVentaTable} sortable />
         <Column field="modelo" header="Modelo" />
-        <Column field="stock" header="Existencia" />
+        <Column field="stock" header="Existencia" style={{width:"12rem"}} sortable filter filterPlaceholder="Stock limite" />
         <Column field="marca" header="Marca" />
       </DataTable>
       <Sidebar visible={!!params.get("p")} header="Crear movimiento" onHide={() => router.replace(`${pathname}`)} position="right" className="w-11/12 md:w-8/12 lg:w-6/12 xl:w-4/12">

@@ -13,18 +13,21 @@ import { InputText } from "primereact/inputtext";
 import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { permisos } from "@/utils/permisos";
 
 export function TablaClientes() {
   const { data: clientes, isLoading, isError } = useGetClientesQuery();
   const [filters, setFilters] = useState<DataTableFilterMeta>({
     global: { value: null, matchMode: FilterMatchMode.CONTAINS },
   });
+  const {data: session} = useSession()
   const router = useRouter();
 
   function AccionesTemplate(row: Cliente) {
     return (
       <div className="flex gap-0.5"  >
-        <Button severity="success" text icon="pi pi-pencil" size="small" onClick={() => router.push(`/work/clientes/edit?cliente=${JSON.stringify(row)}`)} />
+        <Button severity="success" text icon="pi pi-pencil" size="small" onClick={() => router.push(`/work/clientes/edit?cliente=${JSON.stringify(row)}`)} disabled={session?.user?.permiso !== permisos.ADMIN} />
         <Button severity="info" text icon="pi pi-info-circle" size="small" onClick={() => router.push(`/work/clientes/${row.idCliente}`)} />
         <Button severity="success" text icon="pi pi-money-bill" size="small" onClick={() => router.push(`/work/clientes/pagos/${row.idCliente}`)} />
       </div>
