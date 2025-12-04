@@ -40,7 +40,6 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const user = await auth();
-  //@ts-expect-error holla
   const empleado = user?.user?.empleado;
   const conn = await conexiondb.getConnection();
   try {

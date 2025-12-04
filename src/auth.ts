@@ -43,7 +43,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
     session: async ({ session, token }) => {
-      // @ts-expect-error hola
       session.user = token.user;
       return session;
     },

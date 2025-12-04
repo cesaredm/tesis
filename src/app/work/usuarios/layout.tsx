@@ -12,7 +12,7 @@ export default function LayoutCliente({ children }: { children: React.ReactNode 
       <header>
         <Tools options={items} />
       </header>
-      <Principal children={children} />
+      <Principal>{children}</Principal>
     </div>
   );
 }

@@ -28,7 +28,6 @@ export function AvatarUser() {
       <Avatar
       
         label={
-          //@ts-expect-error hola
           data?.user?.usuario?.toUpperCase().slice(0,2) || "CE"
         }
         //image="https://avatars.githubusercontent.com/u/54245599?v=4&size=64"

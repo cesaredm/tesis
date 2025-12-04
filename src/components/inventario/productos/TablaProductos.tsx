@@ -3,7 +3,7 @@ import { useEliminarProductoMutation, useGetProductosQuery } from "@/hooks/produ
 import { Producto } from "@/domain/entities/Productos";
 import { RespuestaApi } from "@/types";
 import { formatDecimal } from "@/utils/helpers";
-import { Column, ColumnFilterElementTemplateOptions } from "primereact/column";
+import { Column} from "primereact/column";
 import { DataTable, DataTableFilterMeta } from "primereact/datatable";
 import { Button } from "primereact/button";
 import { IconField } from "primereact/iconfield";

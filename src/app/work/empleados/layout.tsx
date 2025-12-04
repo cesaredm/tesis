@@ -12,7 +12,7 @@ export default function LayoutEmpleados({ children }: { children: React.ReactNod
       <header>
         <Tools options={items} />
       </header>
-      <Principal children={children} />
+      <Principal>{children}</Principal>
     </div>
   );
 }

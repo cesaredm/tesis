@@ -12,7 +12,6 @@ export async function POST(request: Request) {
   const conn = await conexiondb.getConnection();
   try {
     const sesion = await auth();
-    //@ts-expect-error holla
     const empleado = sesion?.user?.empleado;
     const body = await request.json();
     const listaDetalles = body.detalles;

@@ -1,6 +1,3 @@
-import { DefaultSession, DefaultUser } from "next-auth";
-import { JWT } from "next-auth/jwt";
-
 // Asumo que tu tipo UserSession se parece a esto:
 export interface UserSession {
   usuario: string;
@@ -24,5 +21,5 @@ declare module "next-auth" {
   }
 
   // 3. Opcional: Aumentar el objeto User (para el adapter)
-  interface User extends UserSession {}
+  // interface User extends UserSession {}
 }
